@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farm Credit Companion</title>
+    <title th:text="#{app.title}">Seasonal Farm Credit Planner</title>
 
     <style>
         :root {
@@ -301,122 +301,135 @@
     <aside class="sidebar">
         <div class="brand">
             <span class="brand-icon">🌾</span>
-            <h1>Farm Credit Companion</h1>
-            <p>Plan crops, loans and repayments</p>
+            <h1 th:text="#{app.title}">Farm Credit Companion</h1>
+            <p th:text="#{app.tagline}">Plan crops, loans and repayments</p>
         </div>
 
-        <p class="menu-title">MAIN MENU</p>
-        <a class="nav-item active" href="/">⌂ Dashboard</a>
-        <a class="nav-item" href="#farmer-form">♟ Farmer Profiles</a>
-        <a class="nav-item" href="#">🌱 Crop Seasons</a>
-        <a class="nav-item" href="#">₹ Loan Management</a>
-        <a class="nav-item" href="#">✓ Repayments</a>
-        <a class="nav-item" href="#">⚠ Risk Analysis</a>
+        <p class="menu-title" th:text="#{menu.main}">MAIN MENU</p>
+        <a class="nav-item active" href="/" th:text="#{nav.dashboard}">⌂ Dashboard</a>
+        <a class="nav-item" href="#farmer-form" th:text="#{nav.farmers}">♟ Farmer Profiles</a>
+        <a class="nav-item" href="#" th:text="#{nav.cropSeasons}">🌱 Crop Seasons</a>
+        <a class="nav-item" href="#" th:text="#{nav.loans}">₹ Loan Management</a>
+        <a class="nav-item" href="#" th:text="#{nav.repayments}">✓ Repayments</a>
+        <a class="nav-item" href="#" th:text="#{nav.riskAnalysis}">⚠ Risk Analysis</a>
 
         <div class="tip-box">
-            <strong>Today's farm tip 🌿</strong><br>
-            Record crop costs and expected income regularly for better planning.
+            <strong th:text="#{tip.title}">Today's farm tip 🌿</strong><br>
+            <span th:text="#{tip.text}">
+                Record crop costs and expected income regularly for better planning.
+            </span>
         </div>
     </aside>
 
     <main class="main-content">
         <header class="topbar">
             <div>
-                <h2>Welcome, Farmer 👋</h2>
-                <p>Plan your crop season and credit repayments with confidence.</p>
+                <h2 th:text="#{welcome.title}">Welcome, Farmer 👋</h2>
+                <p th:text="#{welcome.subtitle}">
+                    Plan your crop season and credit repayments with confidence.
+                </p>
             </div>
 
-            <select class="language-select" aria-label="Select language">
-                <option value="en" selected>English</option>
-                <option value="as">অসমীয়া — Assamese</option>
-                <option value="bn">বাংলা — Bengali</option>
-                <option value="brx">बड़ो — Bodo</option>
-                <option value="doi">डोगरी — Dogri</option>
-                <option value="gu">ગુજરાતી — Gujarati</option>
-                <option value="hi">हिन्दी — Hindi</option>
-                <option value="kn">ಕನ್ನಡ — Kannada</option>
-                <option value="ks">کٲشُر — Kashmiri</option>
-                <option value="kok">कोंकणी — Konkani</option>
-                <option value="mai">मैथिली — Maithili</option>
-                <option value="ml">മലയാളം — Malayalam</option>
-                <option value="mni">মৈতৈলোন্ — Meitei</option>
-                <option value="mr">मराठी — Marathi</option>
-                <option value="ne">नेपाली — Nepali</option>
-                <option value="or">ଓଡ଼ିଆ — Odia</option>
-                <option value="pa">ਪੰਜਾਬੀ — Punjabi</option>
-                <option value="sa">संस्कृतम् — Sanskrit</option>
-                <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ — Santali</option>
-                <option value="sd">سنڌي — Sindhi</option>
-                <option value="ta">தமிழ் — Tamil</option>
-                <option value="te">తెలుగు — Telugu</option>
-                <option value="ur">اردو — Urdu</option>
+            <select class="language-select"
+                    th:attr="aria-label=#{language.select}"
+                    onchange="window.location.href='?lang=' + this.value">
+                <option value="en" th:selected="${#locale.language == 'en'}">English</option>
+                <option value="as" th:selected="${#locale.language == 'as'}">অসমীয়া — Assamese</option>
+                <option value="bn" th:selected="${#locale.language == 'bn'}">বাংলা — Bengali</option>
+                <option value="brx" th:selected="${#locale.language == 'brx'}">बड़ो — Bodo</option>
+                <option value="doi" th:selected="${#locale.language == 'doi'}">डोगरी — Dogri</option>
+                <option value="gu" th:selected="${#locale.language == 'gu'}">ગુજરાતી — Gujarati</option>
+                <option value="hi" th:selected="${#locale.language == 'hi'}">हिन्दी — Hindi</option>
+                <option value="kn" th:selected="${#locale.language == 'kn'}">ಕನ್ನಡ — Kannada</option>
+                <option value="ks" th:selected="${#locale.language == 'ks'}">کٲشُر — Kashmiri</option>
+                <option value="kok" th:selected="${#locale.language == 'kok'}">कोंकणी — Konkani</option>
+                <option value="mai" th:selected="${#locale.language == 'mai'}">मैथिली — Maithili</option>
+                <option value="ml" th:selected="${#locale.language == 'ml'}">മലയാളം — Malayalam</option>
+                <option value="mni" th:selected="${#locale.language == 'mni'}">মৈতৈলোন্ — Meitei</option>
+                <option value="mr" th:selected="${#locale.language == 'mr'}">मराठी — Marathi</option>
+                <option value="ne" th:selected="${#locale.language == 'ne'}">नेपाली — Nepali</option>
+                <option value="or" th:selected="${#locale.language == 'or'}">ଓଡ଼ିଆ — Odia</option>
+                <option value="pa" th:selected="${#locale.language == 'pa'}">ਪੰਜਾਬੀ — Punjabi</option>
+                <option value="sa" th:selected="${#locale.language == 'sa'}">संस्कृतम् — Sanskrit</option>
+                <option value="sat" th:selected="${#locale.language == 'sat'}">ᱥᱟᱱᱛᱟᱲᱤ — Santali</option>
+                <option value="sd" th:selected="${#locale.language == 'sd'}">سنڌي — Sindhi</option>
+                <option value="ta" th:selected="${#locale.language == 'ta'}">தமிழ் — Tamil</option>
+                <option value="te" th:selected="${#locale.language == 'te'}">తెలుగు — Telugu</option>
+                <option value="ur" th:selected="${#locale.language == 'ur'}">اردو — Urdu</option>
             </select>
         </header>
 
         <section class="stats-grid">
             <article class="stat-card">
                 <span class="stat-icon">👩🏽‍🌾</span>
-                <span class="stat-label">Total Farmers</span>
+                <span class="stat-label" th:text="#{stats.totalFarmers}">Total Farmers</span>
                 <span class="stat-number" th:text="${#lists.size(farmers)}">0</span>
             </article>
 
             <article class="stat-card">
                 <span class="stat-icon">🌾</span>
-                <span class="stat-label">Active Crop Seasons</span>
+                <span class="stat-label" th:text="#{stats.activeCropSeasons}">Active Crop Seasons</span>
                 <span class="stat-number">0</span>
             </article>
 
             <article class="stat-card">
                 <span class="stat-icon">₹</span>
-                <span class="stat-label">Active Loans</span>
+                <span class="stat-label" th:text="#{stats.activeLoans}">Active Loans</span>
                 <span class="stat-number">0</span>
             </article>
         </section>
 
         <section class="content-grid">
             <article class="panel" id="farmer-form">
-                <h3>Add a New Farmer</h3>
+                <h3 th:text="#{farmer.addTitle}">Add a New Farmer</h3>
 
                 <div class="message success" th:if="${successMessage}" th:text="${successMessage}"></div>
                 <div class="message error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
 
                 <form th:action="@{/farmers}" method="post">
                     <div class="field">
-                        <label for="fullName">Farmer's Full Name</label>
+                        <label for="fullName" th:text="#{farmer.name}">Farmer's Full Name</label>
                         <input id="fullName" name="fullName" type="text"
+                               th:placeholder="#{farmer.namePlaceholder}"
                                placeholder="For example: Ramesh Kumar" required>
                     </div>
 
                     <div class="field">
-                        <label for="phone">Mobile Number</label>
+                        <label for="phone" th:text="#{farmer.phone}">Mobile Number</label>
                         <input id="phone" name="phone" type="tel"
+                               th:placeholder="#{farmer.phonePlaceholder}"
                                placeholder="For example: 9876543210" required>
                     </div>
 
                     <div class="field">
-                        <label for="village">Village / Town</label>
+                        <label for="village" th:text="#{farmer.village}">Village / Town</label>
                         <input id="village" name="village" type="text"
+                               th:placeholder="#{farmer.villagePlaceholder}"
                                placeholder="For example: Sitapur" required>
                     </div>
 
-                    <button class="save-button" type="submit">Add Farmer</button>
+                    <button class="save-button" type="submit" th:text="#{farmer.addButton}">
+                        Add Farmer
+                    </button>
                 </form>
             </article>
 
             <article class="panel">
-                <h3>Farmer Directory</h3>
+                <h3 th:text="#{directory.title}">Farmer Directory</h3>
 
                 <div class="empty-state" th:if="${#lists.isEmpty(farmers)}">
-                    No farmers have been added yet.<br>
-                    Use the form on the left to add the first farmer.
+                    <span th:text="#{directory.empty}">No farmers have been added yet.</span><br>
+                    <span th:text="#{directory.help}">
+                        Use the form on the left to add the first farmer.
+                    </span>
                 </div>
 
                 <table th:if="${!#lists.isEmpty(farmers)}">
                     <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Mobile Number</th>
-                        <th>Village / Town</th>
+                        <th th:text="#{table.name}">Name</th>
+                        <th th:text="#{table.phone}">Mobile Number</th>
+                        <th th:text="#{table.village}">Village / Town</th>
                     </tr>
                     </thead>
 

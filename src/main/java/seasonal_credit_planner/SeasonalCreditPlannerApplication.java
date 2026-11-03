@@ -8,7 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 		"controller",
 		"service",
 		"dao",
-		"database"
+		"database",
+		"config"
 })
 public class SeasonalCreditPlannerApplication {
 
