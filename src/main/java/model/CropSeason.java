@@ -6,6 +6,7 @@ public class CropSeason {
 
     private Long id;
     private Long farmerId;
+    private String farmerName;
     private String seasonName;
     private String cropName;
     private BigDecimal landAreaAcres;
@@ -41,6 +42,14 @@ public class CropSeason {
 
     public void setFarmerId(Long farmerId) {
         this.farmerId = farmerId;
+    }
+
+    public String getFarmerName() {
+        return farmerName;
+    }
+
+    public void setFarmerName(String farmerName) {
+        this.farmerName = farmerName;
     }
 
     public String getSeasonName() {

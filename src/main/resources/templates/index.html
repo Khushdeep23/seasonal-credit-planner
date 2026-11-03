@@ -369,7 +369,7 @@
             <article class="stat-card">
                 <span class="stat-icon">🌾</span>
                 <span class="stat-label" th:text="#{stats.activeCropSeasons}">Active Crop Seasons</span>
-                <span class="stat-number">0</span>
+                <span class="stat-number" th:text="${#lists.size(cropSeasons)}">0</span>
             </article>
 
             <article class="stat-card">
@@ -438,6 +438,101 @@
                         <td th:text="${farmer.fullName}">Name</td>
                         <td th:text="${farmer.phone}">Phone</td>
                         <td th:text="${farmer.village}">Village</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </article>
+        </section>
+        <section class="content-grid" id="crop-seasons">
+            <article class="panel">
+                <h3 th:text="#{crop.addTitle}">Plan a Crop Season</h3>
+
+                <form th:action="@{/crop-seasons}" method="post">
+                    <div class="field">
+                        <label for="farmerId" th:text="#{crop.farmer}">Farmer</label>
+                        <select id="farmerId" name="farmerId" required class="language-select"
+                                style="width: 100%;">
+                            <option value="" selected disabled th:text="#{crop.selectFarmer}">
+                                Select a farmer
+                            </option>
+                            <option th:each="farmer : ${farmers}"
+                                    th:value="${farmer.id}"
+                                    th:text="${farmer.fullName}">
+                                Farmer name
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="seasonName" th:text="#{crop.season}">Season Name</label>
+                        <input id="seasonName" name="seasonName" type="text"
+                               placeholder="For example: Kharif 2026" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="cropName" th:text="#{crop.cropName}">Crop Name</label>
+                        <input id="cropName" name="cropName" type="text"
+                               placeholder="For example: Wheat" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="landAreaAcres" th:text="#{crop.landArea}">
+                            Land Area (Acres)
+                        </label>
+                        <input id="landAreaAcres" name="landAreaAcres" type="number"
+                               min="0.01" step="0.01" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="expectedYieldQuintals" th:text="#{crop.expectedYield}">
+                            Expected Yield (Quintals)
+                        </label>
+                        <input id="expectedYieldQuintals" name="expectedYieldQuintals"
+                               type="number" min="0.01" step="0.01" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="expectedPricePerQuintal" th:text="#{crop.expectedPrice}">
+                            Expected Price per Quintal
+                        </label>
+                        <input id="expectedPricePerQuintal" name="expectedPricePerQuintal"
+                               type="number" min="0.01" step="0.01" required>
+                    </div>
+
+                    <button class="save-button" type="submit" th:text="#{crop.addButton}">
+                        Save Crop Season
+                    </button>
+                </form>
+            </article>
+
+            <article class="panel">
+                <h3 th:text="#{crop.directoryTitle}">Crop Season Plans</h3>
+
+                <div class="empty-state" th:if="${#lists.isEmpty(cropSeasons)}"
+                     th:text="#{crop.empty}">
+                    No crop seasons have been planned yet.
+                </div>
+
+                <table th:if="${!#lists.isEmpty(cropSeasons)}">
+                    <thead>
+                    <tr>
+                        <th th:text="#{crop.tableFarmer}">Farmer</th>
+                        <th th:text="#{crop.tableSeason}">Season</th>
+                        <th th:text="#{crop.tableCrop}">Crop</th>
+                        <th th:text="#{crop.tableArea}">Land Area</th>
+                        <th th:text="#{crop.tableYield}">Expected Yield</th>
+                        <th th:text="#{crop.tablePrice}">Expected Price</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="cropSeason : ${cropSeasons}">
+                        <td th:text="${cropSeason.farmerName}">Farmer Name</td>
+                        <td th:text="${cropSeason.seasonName}">Season</td>
+                        <td th:text="${cropSeason.cropName}">Crop</td>
+                        <td th:text="${cropSeason.landAreaAcres}">0</td>
+                        <td th:text="${cropSeason.expectedYieldQuintals}">0</td>
+                        <td th:text="${cropSeason.expectedPricePerQuintal}">0</td>
                     </tr>
                     </tbody>
                 </table>
