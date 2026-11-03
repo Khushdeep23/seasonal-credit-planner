@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Credit Companion</title>
+
+    <style>
+        :root {
+            --forest: #354024;
+            --moss: #8b9063;
+            --cream: #e5d7c4;
+            --tan: #cfb899;
+            --brown: #4c3d19;
+            --white: #fffdf7;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--forest);
+            background: #f3eddf;
+            font-family: "Nirmala UI", "Segoe UI", Arial, sans-serif;
+        }
+
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 255px;
+            padding: 28px 18px;
+            color: var(--cream);
+            background:
+                radial-gradient(circle at 20% 10%, #657345 0, transparent 25%),
+                linear-gradient(180deg, #354024 0%, #28331d 100%);
+        }
+
+        .brand {
+            padding: 18px;
+            margin-bottom: 28px;
+            text-align: center;
+            border: 1px solid rgba(229, 215, 196, 0.35);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .brand-icon {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 38px;
+        }
+
+        .brand h1 {
+            margin: 0;
+            color: #fffdf7;
+            font-size: 21px;
+        }
+
+        .brand p {
+            margin: 6px 0 0;
+            font-size: 12px;
+        }
+
+        .menu-title {
+            margin: 22px 12px 10px;
+            color: #cbd1ad;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 13px 14px;
+            margin: 7px 0;
+            color: #e5d7c4;
+            text-decoration: none;
+            border-radius: 12px;
+        }
+
+        .nav-item.active,
+        .nav-item:hover {
+            color: var(--forest);
+            background: var(--cream);
+        }
+
+        .tip-box {
+            padding: 16px;
+            margin-top: 34px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.10);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .topbar h2 {
+            margin: 0;
+            font-size: 29px;
+        }
+
+        .topbar p {
+            margin: 6px 0 0;
+            color: #68705a;
+        }
+
+        .language-select {
+            padding: 10px 13px;
+            color: var(--forest);
+            border: 1px solid var(--tan);
+            border-radius: 10px;
+            background: var(--white);
+            font: inherit;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card,
+        .panel {
+            border: 1px solid rgba(76, 61, 25, 0.10);
+            border-radius: 20px;
+            background: rgba(255, 253, 247, 0.92);
+            box-shadow: 0 7px 22px rgba(76, 61, 25, 0.08);
+        }
+
+        .stat-card {
+            padding: 19px;
+        }
+
+        .stat-icon {
+            font-size: 26px;
+        }
+
+        .stat-label {
+            display: block;
+            margin-top: 8px;
+            color: #6d735f;
+            font-size: 13px;
+        }
+
+        .stat-number {
+            display: block;
+            margin-top: 4px;
+            color: var(--brown);
+            font-size: 27px;
+            font-weight: 800;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: minmax(280px, 0.9fr) minmax(380px, 1.4fr);
+            gap: 22px;
+        }
+
+        .panel {
+            padding: 23px;
+        }
+
+        .panel h3 {
+            margin: 0 0 18px;
+            color: var(--brown);
+            font-size: 19px;
+        }
+
+        .field {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            color: #5d674d;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            color: var(--forest);
+            border: 1px solid #d9c9ad;
+            border-radius: 10px;
+            outline: none;
+            background: #fffdf7;
+            font: inherit;
+        }
+
+        input:focus {
+            border-color: var(--moss);
+            box-shadow: 0 0 0 3px rgba(139, 144, 99, 0.18);
+        }
+
+        .save-button {
+            width: 100%;
+            padding: 13px;
+            cursor: pointer;
+            color: white;
+            border: 0;
+            border-radius: 10px;
+            background: var(--forest);
+            font: inherit;
+            font-weight: 700;
+        }
+
+        .save-button:hover {
+            background: #4d5d32;
+        }
+
+        .message {
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .success {
+            color: #275b35;
+            background: #dcefd9;
+        }
+
+        .error {
+            color: #7e2c26;
+            background: #f6dfdc;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            color: #68705a;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 13px 8px;
+            border-bottom: 1px solid #eee3d0;
+        }
+
+        td {
+            color: var(--brown);
+            font-size: 14px;
+        }
+
+        .empty-state {
+            padding: 38px 12px;
+            color: #747965;
+            text-align: center;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+
+            .stats-grid,
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                padding: 18px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="app-layout">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <span class="brand-icon">🌾</span>
+            <h1>Farm Credit Companion</h1>
+            <p>Plan crops, loans and repayments</p>
+        </div>
+
+        <p class="menu-title">MAIN MENU</p>
+        <a class="nav-item active" href="/">⌂ Dashboard</a>
+        <a class="nav-item" href="#farmer-form">♟ Farmer Profiles</a>
+        <a class="nav-item" href="#">🌱 Crop Seasons</a>
+        <a class="nav-item" href="#">₹ Loan Management</a>
+        <a class="nav-item" href="#">✓ Repayments</a>
+        <a class="nav-item" href="#">⚠ Risk Analysis</a>
+
+        <div class="tip-box">
+            <strong>Today's farm tip 🌿</strong><br>
+            Record crop costs and expected income regularly for better planning.
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div>
+                <h2>Welcome, Farmer 👋</h2>
+                <p>Plan your crop season and credit repayments with confidence.</p>
+            </div>
+
+            <select class="language-select" aria-label="Select language">
+                <option value="en" selected>English</option>
+                <option value="as">অসমীয়া — Assamese</option>
+                <option value="bn">বাংলা — Bengali</option>
+                <option value="brx">बड़ो — Bodo</option>
+                <option value="doi">डोगरी — Dogri</option>
+                <option value="gu">ગુજરાતી — Gujarati</option>
+                <option value="hi">हिन्दी — Hindi</option>
+                <option value="kn">ಕನ್ನಡ — Kannada</option>
+                <option value="ks">کٲشُر — Kashmiri</option>
+                <option value="kok">कोंकणी — Konkani</option>
+                <option value="mai">मैथिली — Maithili</option>
+                <option value="ml">മലയാളം — Malayalam</option>
+                <option value="mni">মৈতৈলোন্ — Meitei</option>
+                <option value="mr">मराठी — Marathi</option>
+                <option value="ne">नेपाली — Nepali</option>
+                <option value="or">ଓଡ଼ିଆ — Odia</option>
+                <option value="pa">ਪੰਜਾਬੀ — Punjabi</option>
+                <option value="sa">संस्कृतम् — Sanskrit</option>
+                <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ — Santali</option>
+                <option value="sd">سنڌي — Sindhi</option>
+                <option value="ta">தமிழ் — Tamil</option>
+                <option value="te">తెలుగు — Telugu</option>
+                <option value="ur">اردو — Urdu</option>
+            </select>
+        </header>
+
+        <section class="stats-grid">
+            <article class="stat-card">
+                <span class="stat-icon">👩🏽‍🌾</span>
+                <span class="stat-label">Total Farmers</span>
+                <span class="stat-number" th:text="${#lists.size(farmers)}">0</span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-icon">🌾</span>
+                <span class="stat-label">Active Crop Seasons</span>
+                <span class="stat-number">0</span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-icon">₹</span>
+                <span class="stat-label">Active Loans</span>
+                <span class="stat-number">0</span>
+            </article>
+        </section>
+
+        <section class="content-grid">
+            <article class="panel" id="farmer-form">
+                <h3>Add a New Farmer</h3>
+
+                <div class="message success" th:if="${successMessage}" th:text="${successMessage}"></div>
+                <div class="message error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+                <form th:action="@{/farmers}" method="post">
+                    <div class="field">
+                        <label for="fullName">Farmer's Full Name</label>
+                        <input id="fullName" name="fullName" type="text"
+                               placeholder="For example: Ramesh Kumar" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="phone">Mobile Number</label>
+                        <input id="phone" name="phone" type="tel"
+                               placeholder="For example: 9876543210" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="village">Village / Town</label>
+                        <input id="village" name="village" type="text"
+                               placeholder="For example: Sitapur" required>
+                    </div>
+
+                    <button class="save-button" type="submit">Add Farmer</button>
+                </form>
+            </article>
+
+            <article class="panel">
+                <h3>Farmer Directory</h3>
+
+                <div class="empty-state" th:if="${#lists.isEmpty(farmers)}">
+                    No farmers have been added yet.<br>
+                    Use the form on the left to add the first farmer.
+                </div>
+
+                <table th:if="${!#lists.isEmpty(farmers)}">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Mobile Number</th>
+                        <th>Village / Town</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="farmer : ${farmers}">
+                        <td th:text="${farmer.fullName}">Name</td>
+                        <td th:text="${farmer.phone}">Phone</td>
+                        <td th:text="${farmer.village}">Village</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </article>
+        </section>
+    </main>
+</div>
+</body>
+</html>
