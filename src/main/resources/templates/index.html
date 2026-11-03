@@ -15,7 +15,9 @@
             --white: #fffdf7;
         }
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
@@ -144,8 +146,13 @@
             box-shadow: 0 7px 22px rgba(76, 61, 25, 0.08);
         }
 
-        .stat-card { padding: 19px; }
-        .stat-icon { font-size: 26px; }
+        .stat-card {
+            padding: 19px;
+        }
+
+        .stat-icon {
+            font-size: 26px;
+        }
 
         .stat-label {
             display: block;
@@ -169,7 +176,9 @@
             margin-bottom: 22px;
         }
 
-        .panel { padding: 23px; }
+        .panel {
+            padding: 23px;
+        }
 
         .panel h3 {
             margin: 0 0 18px;
@@ -177,7 +186,9 @@
             font-size: 19px;
         }
 
-        .field { margin-bottom: 15px; }
+        .field {
+            margin-bottom: 15px;
+        }
 
         label {
             display: block;
@@ -187,7 +198,8 @@
             font-weight: 700;
         }
 
-        input {
+        input,
+        textarea {
             width: 100%;
             padding: 12px;
             color: var(--forest);
@@ -198,7 +210,8 @@
             font: inherit;
         }
 
-        input:focus {
+        input:focus,
+        textarea:focus {
             border-color: var(--moss);
             box-shadow: 0 0 0 3px rgba(139, 144, 99, 0.18);
         }
@@ -215,7 +228,9 @@
             font-weight: 700;
         }
 
-        .save-button:hover { background: #4d5d32; }
+        .save-button:hover {
+            background: #4d5d32;
+        }
 
         .message {
             padding: 12px 14px;
@@ -234,7 +249,9 @@
             background: #f6dfdc;
         }
 
-        .table-wrapper { overflow-x: auto; }
+        .table-wrapper {
+            overflow-x: auto;
+        }
 
         table {
             width: 100%;
@@ -248,7 +265,8 @@
             white-space: nowrap;
         }
 
-        th, td {
+        th,
+        td {
             padding: 13px 8px;
             border-bottom: 1px solid #eee3d0;
         }
@@ -266,14 +284,18 @@
         }
 
         @media (max-width: 900px) {
-            .sidebar { display: none; }
+            .sidebar {
+                display: none;
+            }
 
             .stats-grid,
             .content-grid {
                 grid-template-columns: 1fr;
             }
 
-            .main-content { padding: 18px; }
+            .main-content {
+                padding: 18px;
+            }
 
             .topbar {
                 align-items: flex-start;
@@ -298,7 +320,7 @@
         <a class="nav-item" href="#farmer-form" th:text="#{nav.farmers}">♟ Farmer Profiles</a>
         <a class="nav-item" href="#crop-seasons" th:text="#{nav.cropSeasons}">🌱 Crop Seasons</a>
         <a class="nav-item" href="#loans" th:text="#{nav.loans}">₹ Loan Management</a>
-        <a class="nav-item" href="#" th:text="#{nav.repayments}">✓ Repayments</a>
+        <a class="nav-item" href="#repayments" th:text="#{nav.repayments}">✓ Repayments</a>
         <a class="nav-item" href="#" th:text="#{nav.riskAnalysis}">⚠ Risk Analysis</a>
 
         <div class="tip-box">
@@ -718,24 +740,20 @@
                             </td>
 
                             <td th:text="${loan.purpose}">Purpose</td>
-
                             <td th:text="${'₹ ' + #numbers.formatDecimal(loan.loanAmount, 1, 'COMMA', 2, 'POINT')}">
                                 ₹ 0.00
                             </td>
-
                             <td th:text="${loan.annualInterestRate + '%'}">0%</td>
-
                             <td>
                                 <span th:text="${loan.tenureMonths}">0</span>
                                 <span th:text="#{loan.months}">months</span>
                             </td>
-
                             <td th:text="${loan.startDate}">2026-01-01</td>
                             <td th:text="${loan.endDate}">2026-12-31</td>
 
                             <td>
-    <span th:if="${loan.status == 'ACTIVE'}"
-          th:text="#{loan.statusActive}">Active</span>
+                                <span th:if="${loan.status == 'ACTIVE'}"
+                                      th:text="#{loan.statusActive}">Active</span>
                                 <span th:if="${loan.status == 'CLOSED'}"
                                       th:text="#{loan.statusClosed}">Closed</span>
                             </td>
@@ -755,7 +773,7 @@
                                         th:data-status="${loan.status}"
                                         onclick="editLoan(this)"
                                         style="padding: 8px 12px; margin-bottom: 8px; cursor: pointer; color: white;
-                   border: 0; border-radius: 8px; background: #354024;">
+                                               border: 0; border-radius: 8px; background: #354024;">
                                     Edit
                                 </button>
 
@@ -765,7 +783,266 @@
                                     <button type="submit"
                                             th:text="#{loan.deleteButton}"
                                             style="padding: 8px 12px; cursor: pointer; color: white;
-                       border: 0; border-radius: 8px; background: #9b3c34;">
+                                                   border: 0; border-radius: 8px; background: #9b3c34;">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+
+        <section class="content-grid" id="repayments">
+            <article class="panel">
+                <h3>Plan a Repayment Installment</h3>
+
+                <form id="repaymentScheduleForm"
+                      th:action="@{/repayment-schedules}"
+                      method="post">
+                    <input type="hidden" id="repaymentScheduleId" name="id">
+
+                    <div class="field">
+                        <label for="scheduleLoanId">Loan</label>
+                        <select id="scheduleLoanId" name="loanId" required
+                                class="language-select" style="width: 100%;">
+                            <option value="" selected disabled>Select a loan</option>
+                            <option th:each="loan : ${loans}"
+                                    th:value="${loan.id}"
+                                    th:text="${'Loan #' + loan.id + ' - ' + loan.farmerName + ' - ₹ ' + loan.loanAmount}">
+                                Loan
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="installmentNumber">Installment Number</label>
+                        <input id="installmentNumber" name="installmentNumber"
+                               type="number" min="1" step="1" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="dueDate">Due Date</label>
+                        <input id="dueDate" name="dueDate" type="date" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="principalAmount">Principal Amount (₹)</label>
+                        <input id="principalAmount" name="principalAmount"
+                               type="number" min="0" step="0.01" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="interestAmount">Interest Amount (₹)</label>
+                        <input id="interestAmount" name="interestAmount"
+                               type="number" min="0" step="0.01" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="paymentStatus">Payment Status</label>
+                        <select id="paymentStatus" name="paymentStatus" required
+                                class="language-select" style="width: 100%;">
+                            <option value="PENDING" selected>Pending</option>
+                            <option value="PAID">Paid</option>
+                            <option value="OVERDUE">Overdue</option>
+                        </select>
+                    </div>
+
+                    <button id="repaymentScheduleSubmitButton"
+                            class="save-button"
+                            type="submit"
+                            data-update-label="Update Repayment Schedule">
+                        Save Repayment Schedule
+                    </button>
+                </form>
+            </article>
+
+            <article class="panel">
+                <h3>Repayment Schedule Directory</h3>
+
+                <div class="empty-state" th:if="${#lists.isEmpty(repaymentSchedules)}">
+                    No repayment schedules have been added yet.
+                </div>
+
+                <div class="table-wrapper" th:if="${!#lists.isEmpty(repaymentSchedules)}">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Farmer</th>
+                            <th>Loan Type</th>
+                            <th>Installment</th>
+                            <th>Due Date</th>
+                            <th>Principal</th>
+                            <th>Interest</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="schedule : ${repaymentSchedules}">
+                            <td th:text="${schedule.farmerName}">Farmer</td>
+                            <td th:text="${schedule.loanType}">Loan Type</td>
+                            <td th:text="${schedule.installmentNumber}">1</td>
+                            <td th:text="${schedule.dueDate}">2026-12-01</td>
+                            <td th:text="${'₹ ' + #numbers.formatDecimal(schedule.principalAmount, 1, 'COMMA', 2, 'POINT')}">
+                                ₹ 0.00
+                            </td>
+                            <td th:text="${'₹ ' + #numbers.formatDecimal(schedule.interestAmount, 1, 'COMMA', 2, 'POINT')}">
+                                ₹ 0.00
+                            </td>
+                            <td th:text="${'₹ ' + #numbers.formatDecimal(schedule.totalAmount, 1, 'COMMA', 2, 'POINT')}">
+                                ₹ 0.00
+                            </td>
+                            <td th:text="${schedule.paymentStatus}">PENDING</td>
+
+                            <td>
+                                <button type="button"
+                                        th:data-id="${schedule.id}"
+                                        th:data-loan-id="${schedule.loanId}"
+                                        th:data-installment-number="${schedule.installmentNumber}"
+                                        th:data-due-date="${schedule.dueDate}"
+                                        th:data-principal-amount="${schedule.principalAmount}"
+                                        th:data-interest-amount="${schedule.interestAmount}"
+                                        th:data-payment-status="${schedule.paymentStatus}"
+                                        onclick="editRepaymentSchedule(this)"
+                                        style="padding: 8px 12px; margin-bottom: 8px; cursor: pointer; color: white;
+                                               border: 0; border-radius: 8px; background: #354024;">
+                                    Edit
+                                </button>
+
+                                <form th:action="@{/repayment-schedules/delete}" method="post"
+                                      onsubmit="return confirm('Delete this repayment schedule?');">
+                                    <input type="hidden" name="id" th:value="${schedule.id}">
+                                    <button type="submit"
+                                            style="padding: 8px 12px; cursor: pointer; color: white;
+                                                   border: 0; border-radius: 8px; background: #9b3c34;">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+
+        <section class="content-grid">
+            <article class="panel">
+                <h3>Record a Repayment</h3>
+
+                <form id="repaymentEntryForm"
+                      th:action="@{/repayment-entries}"
+                      method="post">
+                    <input type="hidden" id="repaymentEntryId" name="id">
+
+                    <div class="field">
+                        <label for="entryScheduleId">Repayment Schedule</label>
+                        <select id="entryScheduleId" name="repaymentScheduleId" required
+                                class="language-select" style="width: 100%;">
+                            <option value="" selected disabled>Select an installment</option>
+                            <option th:each="schedule : ${repaymentSchedules}"
+                                    th:value="${schedule.id}"
+                                    th:text="${schedule.farmerName + ' - Installment ' + schedule.installmentNumber + ' - ₹ ' + schedule.totalAmount}">
+                                Installment
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="paymentDate">Payment Date</label>
+                        <input id="paymentDate" name="paymentDate" type="date" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="amountPaid">Amount Paid (₹)</label>
+                        <input id="amountPaid" name="amountPaid"
+                               type="number" min="0.01" step="0.01" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="paymentMode">Payment Mode</label>
+                        <select id="paymentMode" name="paymentMode" required
+                                class="language-select" style="width: 100%;">
+                            <option value="" selected disabled>Select payment mode</option>
+                            <option value="Cash">Cash</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="remarks">Remarks (Optional)</label>
+                        <textarea id="remarks" name="remarks" rows="3"
+                                  placeholder="For example: Paid at local branch"></textarea>
+                    </div>
+
+                    <button id="repaymentEntrySubmitButton"
+                            class="save-button"
+                            type="submit"
+                            data-update-label="Update Repayment Entry">
+                        Save Repayment Entry
+                    </button>
+                </form>
+            </article>
+
+            <article class="panel">
+                <h3>Repayment Entry Directory</h3>
+
+                <div class="empty-state" th:if="${#lists.isEmpty(repaymentEntries)}">
+                    No repayment entries have been added yet.
+                </div>
+
+                <div class="table-wrapper" th:if="${!#lists.isEmpty(repaymentEntries)}">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Farmer</th>
+                            <th>Installment</th>
+                            <th>Payment Date</th>
+                            <th>Amount Paid</th>
+                            <th>Payment Mode</th>
+                            <th>Remarks</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="entry : ${repaymentEntries}">
+                            <td th:text="${entry.farmerName}">Farmer</td>
+                            <td th:text="${entry.installmentNumber}">1</td>
+                            <td th:text="${entry.paymentDate}">2026-12-01</td>
+                            <td th:text="${'₹ ' + #numbers.formatDecimal(entry.amountPaid, 1, 'COMMA', 2, 'POINT')}">
+                                ₹ 0.00
+                            </td>
+                            <td th:text="${entry.paymentMode}">Cash</td>
+                            <td th:text="${entry.remarks}">Remarks</td>
+
+                            <td>
+                                <button type="button"
+                                        th:data-id="${entry.id}"
+                                        th:data-schedule-id="${entry.repaymentScheduleId}"
+                                        th:data-payment-date="${entry.paymentDate}"
+                                        th:data-amount-paid="${entry.amountPaid}"
+                                        th:data-payment-mode="${entry.paymentMode}"
+                                        th:data-remarks="${entry.remarks}"
+                                        onclick="editRepaymentEntry(this)"
+                                        style="padding: 8px 12px; margin-bottom: 8px; cursor: pointer; color: white;
+                                               border: 0; border-radius: 8px; background: #354024;">
+                                    Edit
+                                </button>
+
+                                <form th:action="@{/repayment-entries/delete}" method="post"
+                                      onsubmit="return confirm('Delete this repayment entry?');">
+                                    <input type="hidden" name="id" th:value="${entry.id}">
+                                    <button type="submit"
+                                            style="padding: 8px 12px; cursor: pointer; color: white;
+                                                   border: 0; border-radius: 8px; background: #9b3c34;">
                                         Delete
                                     </button>
                                 </form>
@@ -820,6 +1097,49 @@
         form.action = "/loans/update";
 
         const submitButton = document.getElementById("loanSubmitButton");
+        submitButton.textContent = submitButton.dataset.updateLabel;
+
+        form.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+
+    function editRepaymentSchedule(button) {
+        const form = document.getElementById("repaymentScheduleForm");
+
+        document.getElementById("repaymentScheduleId").value = button.dataset.id;
+        document.getElementById("scheduleLoanId").value = button.dataset.loanId;
+        document.getElementById("installmentNumber").value = button.dataset.installmentNumber;
+        document.getElementById("dueDate").value = button.dataset.dueDate;
+        document.getElementById("principalAmount").value = button.dataset.principalAmount;
+        document.getElementById("interestAmount").value = button.dataset.interestAmount;
+        document.getElementById("paymentStatus").value = button.dataset.paymentStatus;
+
+        form.action = "/repayment-schedules/update";
+
+        const submitButton = document.getElementById("repaymentScheduleSubmitButton");
+        submitButton.textContent = submitButton.dataset.updateLabel;
+
+        form.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+
+    function editRepaymentEntry(button) {
+        const form = document.getElementById("repaymentEntryForm");
+
+        document.getElementById("repaymentEntryId").value = button.dataset.id;
+        document.getElementById("entryScheduleId").value = button.dataset.scheduleId;
+        document.getElementById("paymentDate").value = button.dataset.paymentDate;
+        document.getElementById("amountPaid").value = button.dataset.amountPaid;
+        document.getElementById("paymentMode").value = button.dataset.paymentMode;
+        document.getElementById("remarks").value = button.dataset.remarks;
+
+        form.action = "/repayment-entries/update";
+
+        const submitButton = document.getElementById("repaymentEntrySubmitButton");
         submitButton.textContent = submitButton.dataset.updateLabel;
 
         form.scrollIntoView({

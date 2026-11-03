@@ -9,6 +9,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import service.CropSeasonService;
 import service.FarmerService;
 import service.LoanService;
+import service.RepaymentEntryService;
+import service.RepaymentScheduleService;
 
 @Controller
 public class FarmerController {
@@ -16,15 +18,21 @@ public class FarmerController {
     private final FarmerService farmerService;
     private final CropSeasonService cropSeasonService;
     private final LoanService loanService;
+    private final RepaymentScheduleService repaymentScheduleService;
+    private final RepaymentEntryService repaymentEntryService;
 
     public FarmerController(
             FarmerService farmerService,
             CropSeasonService cropSeasonService,
-            LoanService loanService) {
+            LoanService loanService,
+            RepaymentScheduleService repaymentScheduleService,
+            RepaymentEntryService repaymentEntryService) {
 
         this.farmerService = farmerService;
         this.cropSeasonService = cropSeasonService;
         this.loanService = loanService;
+        this.repaymentScheduleService = repaymentScheduleService;
+        this.repaymentEntryService = repaymentEntryService;
     }
 
     @GetMapping("/")
@@ -32,6 +40,14 @@ public class FarmerController {
         model.addAttribute("farmers", farmerService.getAllFarmers());
         model.addAttribute("cropSeasons", cropSeasonService.getAllCropSeasons());
         model.addAttribute("loans", loanService.getAllLoans());
+        model.addAttribute(
+                "repaymentSchedules",
+                repaymentScheduleService.getAllRepaymentSchedules()
+        );
+        model.addAttribute(
+                "repaymentEntries",
+                repaymentEntryService.getAllRepaymentEntries()
+        );
 
         return "index";
     }
