@@ -15,9 +15,7 @@
             --white: #fffdf7;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -146,13 +144,8 @@
             box-shadow: 0 7px 22px rgba(76, 61, 25, 0.08);
         }
 
-        .stat-card {
-            padding: 19px;
-        }
-
-        .stat-icon {
-            font-size: 26px;
-        }
+        .stat-card { padding: 19px; }
+        .stat-icon { font-size: 26px; }
 
         .stat-label {
             display: block;
@@ -173,11 +166,10 @@
             display: grid;
             grid-template-columns: minmax(280px, 0.9fr) minmax(380px, 1.4fr);
             gap: 22px;
+            margin-bottom: 22px;
         }
 
-        .panel {
-            padding: 23px;
-        }
+        .panel { padding: 23px; }
 
         .panel h3 {
             margin: 0 0 18px;
@@ -185,9 +177,7 @@
             font-size: 19px;
         }
 
-        .field {
-            margin-bottom: 15px;
-        }
+        .field { margin-bottom: 15px; }
 
         label {
             display: block;
@@ -225,9 +215,7 @@
             font-weight: 700;
         }
 
-        .save-button:hover {
-            background: #4d5d32;
-        }
+        .save-button:hover { background: #4d5d32; }
 
         .message {
             padding: 12px 14px;
@@ -246,9 +234,7 @@
             background: #f6dfdc;
         }
 
-        .table-wrapper {
-            overflow-x: auto;
-        }
+        .table-wrapper { overflow-x: auto; }
 
         table {
             width: 100%;
@@ -280,18 +266,14 @@
         }
 
         @media (max-width: 900px) {
-            .sidebar {
-                display: none;
-            }
+            .sidebar { display: none; }
 
             .stats-grid,
             .content-grid {
                 grid-template-columns: 1fr;
             }
 
-            .main-content {
-                padding: 18px;
-            }
+            .main-content { padding: 18px; }
 
             .topbar {
                 align-items: flex-start;
@@ -315,7 +297,7 @@
         <a class="nav-item active" href="/" th:text="#{nav.dashboard}">⌂ Dashboard</a>
         <a class="nav-item" href="#farmer-form" th:text="#{nav.farmers}">♟ Farmer Profiles</a>
         <a class="nav-item" href="#crop-seasons" th:text="#{nav.cropSeasons}">🌱 Crop Seasons</a>
-        <a class="nav-item" href="#" th:text="#{nav.loans}">₹ Loan Management</a>
+        <a class="nav-item" href="#loans" th:text="#{nav.loans}">₹ Loan Management</a>
         <a class="nav-item" href="#" th:text="#{nav.repayments}">✓ Repayments</a>
         <a class="nav-item" href="#" th:text="#{nav.riskAnalysis}">⚠ Risk Analysis</a>
 
@@ -381,7 +363,7 @@
             <article class="stat-card">
                 <span class="stat-icon">₹</span>
                 <span class="stat-label" th:text="#{stats.activeLoans}">Active Loans</span>
-                <span class="stat-number">0</span>
+                <span class="stat-number" th:text="${#lists.size(loans)}">0</span>
             </article>
         </section>
 
@@ -485,9 +467,7 @@
                     </div>
 
                     <div class="field">
-                        <label for="landAreaAcres" th:text="#{crop.landArea}">
-                            Land Area (Acres)
-                        </label>
+                        <label for="landAreaAcres" th:text="#{crop.landArea}">Land Area (Acres)</label>
                         <input id="landAreaAcres" name="landAreaAcres" type="number"
                                min="0.01" step="0.01" required>
                     </div>
@@ -545,8 +525,8 @@
                             <th th:text="#{crop.tableYield}">Expected Yield</th>
                             <th th:text="#{crop.tablePrice}">Expected Price</th>
                             <th th:text="#{crop.tableCost}">Estimated Cost</th>
-                            <th>Expected Revenue</th>
-                            <th>Net Crop Income</th>
+                            <th th:text="#{crop.tableRevenue}">Expected Revenue</th>
+                            <th th:text="#{crop.tableNetIncome}">Net Crop Income</th>
                             <th th:text="#{crop.actions}">Actions</th>
                         </tr>
                         </thead>
@@ -600,6 +580,202 @@
                 </div>
             </article>
         </section>
+
+        <section class="content-grid" id="loans">
+            <article class="panel">
+                <h3 th:text="#{loan.addTitle}">Apply a Loan Plan</h3>
+
+                <form id="loanForm" th:action="@{/loans}" method="post">
+                    <input type="hidden" id="loanId" name="id">
+
+                    <div class="field">
+                        <label for="loanFarmerId" th:text="#{loan.farmer}">Farmer</label>
+                        <select id="loanFarmerId" name="farmerId" required class="language-select"
+                                style="width: 100%;">
+                            <option value="" selected disabled th:text="#{loan.selectFarmer}">
+                                Select a farmer
+                            </option>
+                            <option th:each="farmer : ${farmers}"
+                                    th:value="${farmer.id}"
+                                    th:text="${farmer.fullName}">
+                                Farmer name
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="loanType" th:text="#{loan.loanType}">Loan Type</label>
+                        <select id="loanType" name="loanType" required class="language-select"
+                                style="width: 100%;">
+                            <option value="" selected disabled th:text="#{loan.selectLoanType}">
+                                Select loan type
+                            </option>
+                            <option value="Crop Loan" th:text="#{loan.cropLoan}">Crop Loan</option>
+                            <option value="Kisan Credit Card" th:text="#{loan.kisanCreditCard}">
+                                Kisan Credit Card
+                            </option>
+                            <option value="Equipment Loan" th:text="#{loan.equipmentLoan}">
+                                Equipment Loan
+                            </option>
+                            <option value="Other" th:text="#{loan.other}">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="purpose" th:text="#{loan.purpose}">Loan Purpose</label>
+                        <input id="purpose" name="purpose" type="text"
+                               th:placeholder="#{loan.purposePlaceholder}"
+                               placeholder="For example: Seeds and fertilizer" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="loanAmount" th:text="#{loan.amount}">Loan Amount (₹)</label>
+                        <input id="loanAmount" name="loanAmount" type="number"
+                               min="0.01" step="0.01" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="annualInterestRate" th:text="#{loan.interestRate}">
+                            Annual Interest Rate (%)
+                        </label>
+                        <input id="annualInterestRate" name="annualInterestRate" type="number"
+                               min="0" step="0.01" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="tenureMonths" th:text="#{loan.tenure}">Tenure (Months)</label>
+                        <input id="tenureMonths" name="tenureMonths" type="number"
+                               min="1" step="1" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="startDate" th:text="#{loan.startDate}">Loan Start Date</label>
+                        <input id="startDate" name="startDate" type="date" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="endDate" th:text="#{loan.endDate}">Loan End Date</label>
+                        <input id="endDate" name="endDate" type="date" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="loanStatus" th:text="#{loan.status}">Loan Status</label>
+                        <select id="loanStatus" name="status" required class="language-select"
+                                style="width: 100%;">
+                            <option value="ACTIVE" selected th:text="#{loan.statusActive}">Active</option>
+                            <option value="CLOSED" th:text="#{loan.statusClosed}">Closed</option>
+                        </select>
+                    </div>
+
+                    <button id="loanSubmitButton"
+                            class="save-button"
+                            type="submit"
+                            th:text="#{loan.addButton}"
+                            th:data-update-label="#{loan.updateButton}">
+                        Save Loan
+                    </button>
+                </form>
+            </article>
+
+            <article class="panel">
+                <h3 th:text="#{loan.directoryTitle}">Loan Directory</h3>
+
+                <div class="empty-state" th:if="${#lists.isEmpty(loans)}"
+                     th:text="#{loan.empty}">
+                    No loans have been added yet.
+                </div>
+
+                <div class="table-wrapper" th:if="${!#lists.isEmpty(loans)}">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th th:text="#{loan.tableFarmer}">Farmer</th>
+                            <th th:text="#{loan.tableType}">Loan Type</th>
+                            <th th:text="#{loan.tablePurpose}">Purpose</th>
+                            <th th:text="#{loan.tableAmount}">Amount</th>
+                            <th th:text="#{loan.tableRate}">Rate</th>
+                            <th th:text="#{loan.tableTenure}">Tenure</th>
+                            <th th:text="#{loan.tableStartDate}">Start Date</th>
+                            <th th:text="#{loan.tableEndDate}">End Date</th>
+                            <th th:text="#{loan.tableStatus}">Status</th>
+                            <th th:text="#{loan.actions}">Actions</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="loan : ${loans}">
+                            <td th:text="${loan.farmerName}">Farmer Name</td>
+
+                            <td>
+                                <span th:if="${loan.loanType == 'Crop Loan'}"
+                                      th:text="#{loan.cropLoan}">Crop Loan</span>
+                                <span th:if="${loan.loanType == 'Kisan Credit Card'}"
+                                      th:text="#{loan.kisanCreditCard}">Kisan Credit Card</span>
+                                <span th:if="${loan.loanType == 'Equipment Loan'}"
+                                      th:text="#{loan.equipmentLoan}">Equipment Loan</span>
+                                <span th:if="${loan.loanType == 'Other'}"
+                                      th:text="#{loan.other}">Other</span>
+                            </td>
+
+                            <td th:text="${loan.purpose}">Purpose</td>
+
+                            <td th:text="${'₹ ' + #numbers.formatDecimal(loan.loanAmount, 1, 'COMMA', 2, 'POINT')}">
+                                ₹ 0.00
+                            </td>
+
+                            <td th:text="${loan.annualInterestRate + '%'}">0%</td>
+
+                            <td>
+                                <span th:text="${loan.tenureMonths}">0</span>
+                                <span th:text="#{loan.months}">months</span>
+                            </td>
+
+                            <td th:text="${loan.startDate}">2026-01-01</td>
+                            <td th:text="${loan.endDate}">2026-12-31</td>
+
+                            <td>
+    <span th:if="${loan.status == 'ACTIVE'}"
+          th:text="#{loan.statusActive}">Active</span>
+                                <span th:if="${loan.status == 'CLOSED'}"
+                                      th:text="#{loan.statusClosed}">Closed</span>
+                            </td>
+
+                            <td>
+                                <button type="button"
+                                        th:text="#{loan.editButton}"
+                                        th:data-id="${loan.id}"
+                                        th:data-farmer-id="${loan.farmerId}"
+                                        th:data-loan-type="${loan.loanType}"
+                                        th:data-purpose="${loan.purpose}"
+                                        th:data-loan-amount="${loan.loanAmount}"
+                                        th:data-interest-rate="${loan.annualInterestRate}"
+                                        th:data-tenure-months="${loan.tenureMonths}"
+                                        th:data-start-date="${loan.startDate}"
+                                        th:data-end-date="${loan.endDate}"
+                                        th:data-status="${loan.status}"
+                                        onclick="editLoan(this)"
+                                        style="padding: 8px 12px; margin-bottom: 8px; cursor: pointer; color: white;
+                   border: 0; border-radius: 8px; background: #354024;">
+                                    Edit
+                                </button>
+
+                                <form th:action="@{/loans/delete}" method="post"
+                                      onsubmit="return confirm('Delete this loan?');">
+                                    <input type="hidden" name="id" th:value="${loan.id}">
+                                    <button type="submit"
+                                            th:text="#{loan.deleteButton}"
+                                            style="padding: 8px 12px; cursor: pointer; color: white;
+                       border: 0; border-radius: 8px; background: #9b3c34;">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
     </main>
 </div>
 
@@ -619,6 +795,31 @@
         form.action = "/crop-seasons/update";
 
         const submitButton = document.getElementById("cropSeasonSubmitButton");
+        submitButton.textContent = submitButton.dataset.updateLabel;
+
+        form.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+
+    function editLoan(button) {
+        const form = document.getElementById("loanForm");
+
+        document.getElementById("loanId").value = button.dataset.id;
+        document.getElementById("loanFarmerId").value = button.dataset.farmerId;
+        document.getElementById("loanType").value = button.dataset.loanType;
+        document.getElementById("purpose").value = button.dataset.purpose;
+        document.getElementById("loanAmount").value = button.dataset.loanAmount;
+        document.getElementById("annualInterestRate").value = button.dataset.interestRate;
+        document.getElementById("tenureMonths").value = button.dataset.tenureMonths;
+        document.getElementById("startDate").value = button.dataset.startDate;
+        document.getElementById("endDate").value = button.dataset.endDate;
+        document.getElementById("loanStatus").value = button.dataset.status;
+
+        form.action = "/loans/update";
+
+        const submitButton = document.getElementById("loanSubmitButton");
         submitButton.textContent = submitButton.dataset.updateLabel;
 
         form.scrollIntoView({
