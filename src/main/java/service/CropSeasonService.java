@@ -24,6 +24,22 @@ public class CropSeasonService {
     public List<CropSeason> getAllCropSeasons() {
         return cropSeasonDao.findAll();
     }
+    public void updateCropSeason(CropSeason cropSeason) {
+        if (cropSeason.getId() == null || cropSeason.getId() <= 0) {
+            throw new IllegalArgumentException("Crop season ID is required.");
+        }
+
+        validateCropSeason(cropSeason);
+        cropSeasonDao.update(cropSeason);
+    }
+
+    public void deleteCropSeason(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Crop season ID is required.");
+        }
+
+        cropSeasonDao.deleteById(id);
+    }
 
     private void validateCropSeason(CropSeason cropSeason) {
         if (cropSeason.getFarmerId() == null || cropSeason.getFarmerId() <= 0) {

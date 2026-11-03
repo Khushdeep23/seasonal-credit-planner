@@ -51,4 +51,60 @@ public class CropSeasonController {
 
         return "redirect:/";
     }
+    @PostMapping("/crop-seasons/update")
+    public String updateCropSeason(
+            @RequestParam Long id,
+            @RequestParam Long farmerId,
+            @RequestParam String seasonName,
+            @RequestParam String cropName,
+            @RequestParam BigDecimal landAreaAcres,
+            @RequestParam BigDecimal expectedYieldQuintals,
+            @RequestParam BigDecimal expectedPricePerQuintal,
+            @RequestParam BigDecimal estimatedCost,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            CropSeason cropSeason = new CropSeason(
+                    farmerId,
+                    seasonName,
+                    cropName,
+                    landAreaAcres,
+                    expectedYieldQuintals,
+                    expectedPricePerQuintal
+            );
+
+            cropSeason.setId(id);
+            cropSeason.setEstimatedCost(estimatedCost);
+
+            cropSeasonService.updateCropSeason(cropSeason);
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Crop season updated successfully."
+            );
+
+        } catch (IllegalArgumentException exception) {
+            redirectAttributes.addFlashAttribute("errorMessage", exception.getMessage());
+        }
+
+        return "redirect:/";
+    }
+
+    @PostMapping("/crop-seasons/delete")
+    public String deleteCropSeason(
+            @RequestParam Long id,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            cropSeasonService.deleteCropSeason(id);
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Crop season deleted successfully."
+            );
+
+        } catch (IllegalArgumentException exception) {
+            redirectAttributes.addFlashAttribute("errorMessage", exception.getMessage());
+        }
+
+        return "redirect:/";
+    }
 }

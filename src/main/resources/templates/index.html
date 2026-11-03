@@ -447,7 +447,8 @@
             <article class="panel">
                 <h3 th:text="#{crop.addTitle}">Plan a Crop Season</h3>
 
-                <form th:action="@{/crop-seasons}" method="post">
+                <form id="cropSeasonForm" th:action="@{/crop-seasons}" method="post">
+                    <input type="hidden" id="cropSeasonId" name="id">
                     <div class="field">
                         <label for="farmerId" th:text="#{crop.farmer}">Farmer</label>
                         <select id="farmerId" name="farmerId" required class="language-select"
@@ -506,7 +507,11 @@
                                min="0" step="0.01" required>
                     </div>
 
-                    <button class="save-button" type="submit" th:text="#{crop.addButton}">
+                    <button id="cropSeasonSubmitButton"
+                            class="save-button"
+                            type="submit"
+                            th:text="#{crop.addButton}"
+                            th:data-update-label="#{crop.updateButton}">
                         Save Crop Season
                     </button>
                 </form>
@@ -530,6 +535,7 @@
                         <th th:text="#{crop.tableYield}">Expected Yield</th>
                         <th th:text="#{crop.tablePrice}">Expected Price</th>
                         <th th:text="#{crop.tableCost}">Estimated Cost</th>
+                        <th th:text="#{crop.actions}">Actions</th>
                     </tr>
                     </thead>
 
@@ -542,6 +548,33 @@
                         <td th:text="${cropSeason.expectedYieldQuintals}">0</td>
                         <td th:text="${cropSeason.expectedPricePerQuintal}">0</td>
                         <td th:text="${cropSeason.estimatedCost}">0</td>
+                        <td>
+                            <button type="button"
+                                    th:text="#{crop.editButton}"
+                                    th:data-id="${cropSeason.id}"
+                                    th:data-farmer-id="${cropSeason.farmerId}"
+                                    th:data-season-name="${cropSeason.seasonName}"
+                                    th:data-crop-name="${cropSeason.cropName}"
+                                    th:data-land-area="${cropSeason.landAreaAcres}"
+                                    th:data-expected-yield="${cropSeason.expectedYieldQuintals}"
+                                    th:data-expected-price="${cropSeason.expectedPricePerQuintal}"
+                                    th:data-estimated-cost="${cropSeason.estimatedCost}"
+                                    onclick="editCropSeason(this)"
+                                    style="padding: 8px 12px; margin-bottom: 8px; cursor: pointer; color: white;
+               border: 0; border-radius: 8px; background: #354024;">
+                                Edit
+                            </button>
+                            <form th:action="@{/crop-seasons/delete}" method="post"
+                                  onsubmit="return confirm('Delete this crop season?');">
+                                <input type="hidden" name="id" th:value="${cropSeason.id}">
+                                <button type="submit"
+                                        th:text="#{crop.deleteButton}"
+                                        style="padding: 8px 12px; cursor: pointer; color: white;
+                       border: 0; border-radius: 8px; background: #9b3c34;">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -549,5 +582,29 @@
         </section>
     </main>
 </div>
+<script>
+    function editCropSeason(button) {
+        const form = document.getElementById("cropSeasonForm");
+
+        document.getElementById("cropSeasonId").value = button.dataset.id;
+        document.getElementById("farmerId").value = button.dataset.farmerId;
+        document.getElementById("seasonName").value = button.dataset.seasonName;
+        document.getElementById("cropName").value = button.dataset.cropName;
+        document.getElementById("landAreaAcres").value = button.dataset.landArea;
+        document.getElementById("expectedYieldQuintals").value = button.dataset.expectedYield;
+        document.getElementById("expectedPricePerQuintal").value = button.dataset.expectedPrice;
+        document.getElementById("estimatedCost").value = button.dataset.estimatedCost;
+
+        form.action = "/crop-seasons/update";
+
+        const submitButton = document.getElementById("cropSeasonSubmitButton");
+        submitButton.textContent = submitButton.dataset.updateLabel;
+
+        form.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+</script>
 </body>
 </html>

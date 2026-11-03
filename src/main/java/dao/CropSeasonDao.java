@@ -22,11 +22,11 @@ public class CropSeasonDao {
 
     public void save(CropSeason cropSeason) {
         String sql = """
-        INSERT INTO crop_seasons
-        (farmer_id, season_name, crop_name, land_area_acres,
-         expected_yield_quintals, expected_price_per_quintal, estimated_cost)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-        """;
+                INSERT INTO crop_seasons
+                (farmer_id, season_name, crop_name, land_area_acres,
+                 expected_yield_quintals, expected_price_per_quintal, estimated_cost)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """;
 
         try (Connection connection = connectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -48,13 +48,14 @@ public class CropSeasonDao {
 
     public List<CropSeason> findAll() {
         String sql = """
-        SELECT cs.id, cs.farmer_id, f.full_name AS farmer_name,
-               cs.season_name, cs.crop_name, cs.land_area_acres,
-              cs.expected_yield_quintals, cs.expected_price_per_quintal, cs.estimated_cost
-        FROM crop_seasons cs
-        JOIN farmers f ON cs.farmer_id = f.id
-        ORDER BY cs.id DESC
-        """;
+                SELECT cs.id, cs.farmer_id, f.full_name AS farmer_name,
+                       cs.season_name, cs.crop_name, cs.land_area_acres,
+                       cs.expected_yield_quintals, cs.expected_price_per_quintal,
+                       cs.estimated_cost
+                FROM crop_seasons cs
+                JOIN farmers f ON cs.farmer_id = f.id
+                ORDER BY cs.id DESC
+                """;
 
         List<CropSeason> cropSeasons = new ArrayList<>();
 
@@ -74,11 +75,11 @@ public class CropSeasonDao {
                 cropSeason.setExpectedYieldQuintals(
                         resultSet.getBigDecimal("expected_yield_quintals")
                 );
-                cropSeason.setEstimatedCost(
-                        resultSet.getBigDecimal("estimated_cost")
-                );
                 cropSeason.setExpectedPricePerQuintal(
                         resultSet.getBigDecimal("expected_price_per_quintal")
+                );
+                cropSeason.setEstimatedCost(
+                        resultSet.getBigDecimal("estimated_cost")
                 );
 
                 cropSeasons.add(cropSeason);
@@ -88,6 +89,52 @@ public class CropSeasonDao {
 
         } catch (SQLException exception) {
             throw new RuntimeException("Could not load crop seasons.", exception);
+        }
+    }
+
+    public void update(CropSeason cropSeason) {
+        String sql = """
+                UPDATE crop_seasons
+                SET farmer_id = ?,
+                    season_name = ?,
+                    crop_name = ?,
+                    land_area_acres = ?,
+                    expected_yield_quintals = ?,
+                    expected_price_per_quintal = ?,
+                    estimated_cost = ?
+                WHERE id = ?
+                """;
+
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, cropSeason.getFarmerId());
+            statement.setString(2, cropSeason.getSeasonName());
+            statement.setString(3, cropSeason.getCropName());
+            statement.setBigDecimal(4, cropSeason.getLandAreaAcres());
+            statement.setBigDecimal(5, cropSeason.getExpectedYieldQuintals());
+            statement.setBigDecimal(6, cropSeason.getExpectedPricePerQuintal());
+            statement.setBigDecimal(7, cropSeason.getEstimatedCost());
+            statement.setLong(8, cropSeason.getId());
+
+            statement.executeUpdate();
+
+        } catch (SQLException exception) {
+            throw new RuntimeException("Could not update crop season.", exception);
+        }
+    }
+
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM crop_seasons WHERE id = ?";
+
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, id);
+            statement.executeUpdate();
+
+        } catch (SQLException exception) {
+            throw new RuntimeException("Could not delete crop season.", exception);
         }
     }
 }
