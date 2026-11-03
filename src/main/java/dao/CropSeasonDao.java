@@ -22,11 +22,11 @@ public class CropSeasonDao {
 
     public void save(CropSeason cropSeason) {
         String sql = """
-                INSERT INTO crop_seasons
-                (farmer_id, season_name, crop_name, land_area_acres,
-                 expected_yield_quintals, expected_price_per_quintal)
-                VALUES (?, ?, ?, ?, ?, ?)
-                """;
+        INSERT INTO crop_seasons
+        (farmer_id, season_name, crop_name, land_area_acres,
+         expected_yield_quintals, expected_price_per_quintal, estimated_cost)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """;
 
         try (Connection connection = connectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -37,6 +37,7 @@ public class CropSeasonDao {
             statement.setBigDecimal(4, cropSeason.getLandAreaAcres());
             statement.setBigDecimal(5, cropSeason.getExpectedYieldQuintals());
             statement.setBigDecimal(6, cropSeason.getExpectedPricePerQuintal());
+            statement.setBigDecimal(7, cropSeason.getEstimatedCost());
 
             statement.executeUpdate();
 
@@ -49,7 +50,7 @@ public class CropSeasonDao {
         String sql = """
         SELECT cs.id, cs.farmer_id, f.full_name AS farmer_name,
                cs.season_name, cs.crop_name, cs.land_area_acres,
-               cs.expected_yield_quintals, cs.expected_price_per_quintal
+              cs.expected_yield_quintals, cs.expected_price_per_quintal, cs.estimated_cost
         FROM crop_seasons cs
         JOIN farmers f ON cs.farmer_id = f.id
         ORDER BY cs.id DESC
@@ -72,6 +73,9 @@ public class CropSeasonDao {
                 cropSeason.setLandAreaAcres(resultSet.getBigDecimal("land_area_acres"));
                 cropSeason.setExpectedYieldQuintals(
                         resultSet.getBigDecimal("expected_yield_quintals")
+                );
+                cropSeason.setEstimatedCost(
+                        resultSet.getBigDecimal("estimated_cost")
                 );
                 cropSeason.setExpectedPricePerQuintal(
                         resultSet.getBigDecimal("expected_price_per_quintal")

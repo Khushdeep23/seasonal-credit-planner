@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS crop_seasons (
     land_area_acres DECIMAL(10,2) NOT NULL,
     expected_yield_quintals DECIMAL(10,2) NOT NULL,
     expected_price_per_quintal DECIMAL(12,2) NOT NULL,
+    estimated_cost DECIMAL(12, 2) NOT NULL DEFAULT 0.00,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_crop_season_farmer

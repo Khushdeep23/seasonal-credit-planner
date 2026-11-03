@@ -26,6 +26,7 @@ public class CropSeasonController {
             @RequestParam BigDecimal landAreaAcres,
             @RequestParam BigDecimal expectedYieldQuintals,
             @RequestParam BigDecimal expectedPricePerQuintal,
+            @RequestParam BigDecimal estimatedCost,
             RedirectAttributes redirectAttributes) {
 
         try {
@@ -37,7 +38,7 @@ public class CropSeasonController {
                     expectedYieldQuintals,
                     expectedPricePerQuintal
             );
-
+            cropSeason.setEstimatedCost(estimatedCost);
             cropSeasonService.addCropSeason(cropSeason);
             redirectAttributes.addFlashAttribute(
                     "successMessage",

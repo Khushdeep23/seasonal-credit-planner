@@ -12,14 +12,19 @@ public class CropSeason {
     private BigDecimal landAreaAcres;
     private BigDecimal expectedYieldQuintals;
     private BigDecimal expectedPricePerQuintal;
+    private BigDecimal estimatedCost;
 
     public CropSeason() {
     }
 
-    public CropSeason(Long farmerId, String seasonName, String cropName,
-                      BigDecimal landAreaAcres,
-                      BigDecimal expectedYieldQuintals,
-                      BigDecimal expectedPricePerQuintal) {
+    public CropSeason(
+            Long farmerId,
+            String seasonName,
+            String cropName,
+            BigDecimal landAreaAcres,
+            BigDecimal expectedYieldQuintals,
+            BigDecimal expectedPricePerQuintal) {
+
         this.farmerId = farmerId;
         this.seasonName = seasonName;
         this.cropName = cropName;
@@ -90,5 +95,13 @@ public class CropSeason {
 
     public void setExpectedPricePerQuintal(BigDecimal expectedPricePerQuintal) {
         this.expectedPricePerQuintal = expectedPricePerQuintal;
+    }
+
+    public BigDecimal getEstimatedCost() {
+        return estimatedCost;
+    }
+
+    public void setEstimatedCost(BigDecimal estimatedCost) {
+        this.estimatedCost = estimatedCost;
     }
 }

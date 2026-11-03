@@ -52,5 +52,12 @@ public class CropSeasonService {
                 || cropSeason.getExpectedPricePerQuintal().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Expected price must be greater than zero.");
         }
+
+        if (cropSeason.getEstimatedCost() == null
+                || cropSeason.getEstimatedCost().compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Estimated cost cannot be negative.");
+        }
     }
-}
+
+
+    }

@@ -498,6 +498,13 @@
                         <input id="expectedPricePerQuintal" name="expectedPricePerQuintal"
                                type="number" min="0.01" step="0.01" required>
                     </div>
+                    <div class="field">
+                        <label for="estimatedCost" th:text="#{crop.estimatedCost}">
+                            Estimated Farming Cost
+                        </label>
+                        <input id="estimatedCost" name="estimatedCost" type="number"
+                               min="0" step="0.01" required>
+                    </div>
 
                     <button class="save-button" type="submit" th:text="#{crop.addButton}">
                         Save Crop Season
@@ -522,6 +529,7 @@
                         <th th:text="#{crop.tableArea}">Land Area</th>
                         <th th:text="#{crop.tableYield}">Expected Yield</th>
                         <th th:text="#{crop.tablePrice}">Expected Price</th>
+                        <th th:text="#{crop.tableCost}">Estimated Cost</th>
                     </tr>
                     </thead>
 
@@ -533,6 +541,7 @@
                         <td th:text="${cropSeason.landAreaAcres}">0</td>
                         <td th:text="${cropSeason.expectedYieldQuintals}">0</td>
                         <td th:text="${cropSeason.expectedPricePerQuintal}">0</td>
+                        <td th:text="${cropSeason.estimatedCost}">0</td>
                     </tr>
                     </tbody>
                 </table>
