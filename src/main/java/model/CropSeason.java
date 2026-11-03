@@ -1,6 +1,7 @@
 package model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class CropSeason {
 
@@ -31,6 +32,24 @@ public class CropSeason {
         this.landAreaAcres = landAreaAcres;
         this.expectedYieldQuintals = expectedYieldQuintals;
         this.expectedPricePerQuintal = expectedPricePerQuintal;
+    }
+
+    public BigDecimal getExpectedRevenue() {
+        if (expectedYieldQuintals == null || expectedPricePerQuintal == null) {
+            return BigDecimal.ZERO;
+        }
+
+        return expectedYieldQuintals
+                .multiply(expectedPricePerQuintal)
+                .setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public BigDecimal getNetCropIncome() {
+        BigDecimal cost = estimatedCost == null ? BigDecimal.ZERO : estimatedCost;
+
+        return getExpectedRevenue()
+                .subtract(cost)
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
     public Long getId() {

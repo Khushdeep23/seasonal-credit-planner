@@ -246,6 +246,10 @@
             background: #f6dfdc;
         }
 
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -255,6 +259,7 @@
             color: #68705a;
             font-size: 12px;
             text-align: left;
+            white-space: nowrap;
         }
 
         th, td {
@@ -265,6 +270,7 @@
         td {
             color: var(--brown);
             font-size: 14px;
+            white-space: nowrap;
         }
 
         .empty-state {
@@ -308,7 +314,7 @@
         <p class="menu-title" th:text="#{menu.main}">MAIN MENU</p>
         <a class="nav-item active" href="/" th:text="#{nav.dashboard}">⌂ Dashboard</a>
         <a class="nav-item" href="#farmer-form" th:text="#{nav.farmers}">♟ Farmer Profiles</a>
-        <a class="nav-item" href="#" th:text="#{nav.cropSeasons}">🌱 Crop Seasons</a>
+        <a class="nav-item" href="#crop-seasons" th:text="#{nav.cropSeasons}">🌱 Crop Seasons</a>
         <a class="nav-item" href="#" th:text="#{nav.loans}">₹ Loan Management</a>
         <a class="nav-item" href="#" th:text="#{nav.repayments}">✓ Repayments</a>
         <a class="nav-item" href="#" th:text="#{nav.riskAnalysis}">⚠ Risk Analysis</a>
@@ -443,12 +449,14 @@
                 </table>
             </article>
         </section>
+
         <section class="content-grid" id="crop-seasons">
             <article class="panel">
                 <h3 th:text="#{crop.addTitle}">Plan a Crop Season</h3>
 
                 <form id="cropSeasonForm" th:action="@{/crop-seasons}" method="post">
                     <input type="hidden" id="cropSeasonId" name="id">
+
                     <div class="field">
                         <label for="farmerId" th:text="#{crop.farmer}">Farmer</label>
                         <select id="farmerId" name="farmerId" required class="language-select"
@@ -499,6 +507,7 @@
                         <input id="expectedPricePerQuintal" name="expectedPricePerQuintal"
                                type="number" min="0.01" step="0.01" required>
                     </div>
+
                     <div class="field">
                         <label for="estimatedCost" th:text="#{crop.estimatedCost}">
                             Estimated Farming Cost
@@ -525,63 +534,75 @@
                     No crop seasons have been planned yet.
                 </div>
 
-                <table th:if="${!#lists.isEmpty(cropSeasons)}">
-                    <thead>
-                    <tr>
-                        <th th:text="#{crop.tableFarmer}">Farmer</th>
-                        <th th:text="#{crop.tableSeason}">Season</th>
-                        <th th:text="#{crop.tableCrop}">Crop</th>
-                        <th th:text="#{crop.tableArea}">Land Area</th>
-                        <th th:text="#{crop.tableYield}">Expected Yield</th>
-                        <th th:text="#{crop.tablePrice}">Expected Price</th>
-                        <th th:text="#{crop.tableCost}">Estimated Cost</th>
-                        <th th:text="#{crop.actions}">Actions</th>
-                    </tr>
-                    </thead>
+                <div class="table-wrapper" th:if="${!#lists.isEmpty(cropSeasons)}">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th th:text="#{crop.tableFarmer}">Farmer</th>
+                            <th th:text="#{crop.tableSeason}">Season</th>
+                            <th th:text="#{crop.tableCrop}">Crop</th>
+                            <th th:text="#{crop.tableArea}">Land Area</th>
+                            <th th:text="#{crop.tableYield}">Expected Yield</th>
+                            <th th:text="#{crop.tablePrice}">Expected Price</th>
+                            <th th:text="#{crop.tableCost}">Estimated Cost</th>
+                            <th>Expected Revenue</th>
+                            <th>Net Crop Income</th>
+                            <th th:text="#{crop.actions}">Actions</th>
+                        </tr>
+                        </thead>
 
-                    <tbody>
-                    <tr th:each="cropSeason : ${cropSeasons}">
-                        <td th:text="${cropSeason.farmerName}">Farmer Name</td>
-                        <td th:text="${cropSeason.seasonName}">Season</td>
-                        <td th:text="${cropSeason.cropName}">Crop</td>
-                        <td th:text="${cropSeason.landAreaAcres}">0</td>
-                        <td th:text="${cropSeason.expectedYieldQuintals}">0</td>
-                        <td th:text="${cropSeason.expectedPricePerQuintal}">0</td>
-                        <td th:text="${cropSeason.estimatedCost}">0</td>
-                        <td>
-                            <button type="button"
-                                    th:text="#{crop.editButton}"
-                                    th:data-id="${cropSeason.id}"
-                                    th:data-farmer-id="${cropSeason.farmerId}"
-                                    th:data-season-name="${cropSeason.seasonName}"
-                                    th:data-crop-name="${cropSeason.cropName}"
-                                    th:data-land-area="${cropSeason.landAreaAcres}"
-                                    th:data-expected-yield="${cropSeason.expectedYieldQuintals}"
-                                    th:data-expected-price="${cropSeason.expectedPricePerQuintal}"
-                                    th:data-estimated-cost="${cropSeason.estimatedCost}"
-                                    onclick="editCropSeason(this)"
-                                    style="padding: 8px 12px; margin-bottom: 8px; cursor: pointer; color: white;
-               border: 0; border-radius: 8px; background: #354024;">
-                                Edit
-                            </button>
-                            <form th:action="@{/crop-seasons/delete}" method="post"
-                                  onsubmit="return confirm('Delete this crop season?');">
-                                <input type="hidden" name="id" th:value="${cropSeason.id}">
-                                <button type="submit"
-                                        th:text="#{crop.deleteButton}"
-                                        style="padding: 8px 12px; cursor: pointer; color: white;
-                       border: 0; border-radius: 8px; background: #9b3c34;">
-                                    Delete
+                        <tbody>
+                        <tr th:each="cropSeason : ${cropSeasons}">
+                            <td th:text="${cropSeason.farmerName}">Farmer Name</td>
+                            <td th:text="${cropSeason.seasonName}">Season</td>
+                            <td th:text="${cropSeason.cropName}">Crop</td>
+                            <td th:text="${cropSeason.landAreaAcres}">0</td>
+                            <td th:text="${cropSeason.expectedYieldQuintals}">0</td>
+                            <td th:text="${cropSeason.expectedPricePerQuintal}">0</td>
+                            <td th:text="${cropSeason.estimatedCost}">0</td>
+                            <td th:text="${'₹ ' + #numbers.formatDecimal(cropSeason.expectedRevenue, 1, 'COMMA', 2, 'POINT')}">
+                                ₹ 0.00
+                            </td>
+                            <td th:text="${'₹ ' + #numbers.formatDecimal(cropSeason.netCropIncome, 1, 'COMMA', 2, 'POINT')}">
+                                ₹ 0.00
+                            </td>
+                            <td>
+                                <button type="button"
+                                        th:text="#{crop.editButton}"
+                                        th:data-id="${cropSeason.id}"
+                                        th:data-farmer-id="${cropSeason.farmerId}"
+                                        th:data-season-name="${cropSeason.seasonName}"
+                                        th:data-crop-name="${cropSeason.cropName}"
+                                        th:data-land-area="${cropSeason.landAreaAcres}"
+                                        th:data-expected-yield="${cropSeason.expectedYieldQuintals}"
+                                        th:data-expected-price="${cropSeason.expectedPricePerQuintal}"
+                                        th:data-estimated-cost="${cropSeason.estimatedCost}"
+                                        onclick="editCropSeason(this)"
+                                        style="padding: 8px 12px; margin-bottom: 8px; cursor: pointer; color: white;
+                                               border: 0; border-radius: 8px; background: #354024;">
+                                    Edit
                                 </button>
-                            </form>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+
+                                <form th:action="@{/crop-seasons/delete}" method="post"
+                                      onsubmit="return confirm('Delete this crop season?');">
+                                    <input type="hidden" name="id" th:value="${cropSeason.id}">
+                                    <button type="submit"
+                                            th:text="#{crop.deleteButton}"
+                                            style="padding: 8px 12px; cursor: pointer; color: white;
+                                                   border: 0; border-radius: 8px; background: #9b3c34;">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </article>
         </section>
     </main>
 </div>
+
 <script>
     function editCropSeason(button) {
         const form = document.getElementById("cropSeasonForm");
