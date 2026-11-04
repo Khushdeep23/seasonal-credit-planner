@@ -1,7 +1,8 @@
-
 package controller;
 
+import model.Farmer;
 import model.Loan;
+import model.RepaymentFeasibility;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +14,9 @@ import service.FarmerService;
 import service.LoanCalculationService;
 import service.LoanService;
 import service.RepaymentEntryService;
+import service.RepaymentFeasibilityService;
 import service.RepaymentScheduleService;
+import service.RiskAlertService;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
@@ -29,6 +32,8 @@ public class FarmerController {
     private final RepaymentScheduleService repaymentScheduleService;
     private final RepaymentEntryService repaymentEntryService;
     private final LoanCalculationService loanCalculationService;
+    private final RepaymentFeasibilityService repaymentFeasibilityService;
+    private final RiskAlertService riskAlertService;
 
     public FarmerController(
             FarmerService farmerService,
@@ -36,21 +41,26 @@ public class FarmerController {
             LoanService loanService,
             RepaymentScheduleService repaymentScheduleService,
             RepaymentEntryService repaymentEntryService,
-            LoanCalculationService loanCalculationService
+            LoanCalculationService loanCalculationService,
+            RepaymentFeasibilityService repaymentFeasibilityService,
+            RiskAlertService riskAlertService
     ) {
-
         this.farmerService = farmerService;
         this.cropSeasonService = cropSeasonService;
         this.loanService = loanService;
         this.repaymentScheduleService = repaymentScheduleService;
         this.repaymentEntryService = repaymentEntryService;
         this.loanCalculationService = loanCalculationService;
+        this.repaymentFeasibilityService = repaymentFeasibilityService;
+        this.riskAlertService = riskAlertService;
     }
 
     @GetMapping("/")
     public String home(Model model) {
 
-        model.addAttribute("farmers", farmerService.getAllFarmers());
+        List<Farmer> farmers = farmerService.getAllFarmers();
+
+        model.addAttribute("farmers", farmers);
 
         model.addAttribute(
                 "cropSeasons",
@@ -73,16 +83,25 @@ public class FarmerController {
                     loanCalculationService.calculateTotalRepayment(loan);
 
             loanInterestAmounts.put(loan.getId(), interest);
-
             loanTotalRepayments.put(loan.getId(), totalRepayment);
         }
 
         model.addAttribute("loanInterestAmounts", loanInterestAmounts);
+        model.addAttribute("loanTotalRepayments", loanTotalRepayments);
 
-        model.addAttribute(
-                "loanTotalRepayments",
-                loanTotalRepayments
-        );
+        Map<Long, RepaymentFeasibility> feasibilityResults =
+                new LinkedHashMap<>();
+
+        for (Farmer farmer : farmers) {
+            feasibilityResults.put(
+                    farmer.getId(),
+                    repaymentFeasibilityService.calculateForFarmer(
+                            farmer.getId()
+                    )
+            );
+        }
+
+        model.addAttribute("feasibilityResults", feasibilityResults);
 
         model.addAttribute(
                 "repaymentSchedules",
@@ -92,6 +111,11 @@ public class FarmerController {
         model.addAttribute(
                 "repaymentEntries",
                 repaymentEntryService.getAllRepaymentEntries()
+        );
+
+        model.addAttribute(
+                "riskAlerts",
+                riskAlertService.getAllRiskAlerts()
         );
 
         return "index";

@@ -454,6 +454,145 @@
             </article>
         </section>
 
+        <!-- RISK ALERTS -->
+        <section class="content-grid" id="risk-alerts">
+
+            <article class="panel" style="grid-column: 1 / -1;">
+
+                <h3>Risk Alerts</h3>
+
+                <p>
+                    Live warnings for insufficient crop income, high repayment burden,
+                    overdue installments, and installments due within seven days.
+                </p>
+
+                <div class="empty-state" th:if="${#lists.isEmpty(riskAlerts)}">
+                    No risk alerts right now.
+                </div>
+
+                <div class="table-wrapper" th:if="${!#lists.isEmpty(riskAlerts)}">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Severity</th>
+                            <th>Alert Type</th>
+                            <th>Farmer</th>
+                            <th>Details</th>
+                            <th>Due Date</th>
+                            <th>Amount</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="alert : ${riskAlerts}">
+
+                            <td>
+                        <span th:text="${alert.severity}"
+                              th:style="${alert.severity == 'HIGH'
+                                  ? 'color: #b42318; font-weight: bold;'
+                                  : (alert.severity == 'MEDIUM'
+                                  ? 'color: #b54708; font-weight: bold;'
+                                  : 'color: #26733b; font-weight: bold;')}">
+                            HIGH
+                        </span>
+                            </td>
+
+                            <td th:text="${alert.alertType}">
+                                OVERDUE PAYMENT
+                            </td>
+
+                            <td th:text="${alert.farmerName}">
+                                Farmer Name
+                            </td>
+
+                            <td th:text="${alert.message}">
+                                Alert details
+                            </td>
+
+                            <td th:text="${alert.dueDate != null ? alert.dueDate : '-'}">
+                                -
+                            </td>
+
+                            <td th:text="${'₹ ' + #numbers.formatDecimal(alert.amount, 1, 'COMMA', 2, 'POINT')}">
+                                ₹ 0.00
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+        <!-- REPAYMENT FEASIBILITY ANALYSIS -->
+        <section class="content-grid" id="repayment-feasibility">
+
+            <article class="panel" style="grid-column: 1 / -1;">
+
+                <h3>Repayment Feasibility Analysis</h3>
+
+                <p>
+                    Compares each farmer's projected net crop income
+                    with the total calculated repayment of their registered loans.
+                </p>
+
+                <div class="empty-state" th:if="${#lists.isEmpty(farmers)}">
+                    Add a farmer to view repayment feasibility.
+                </div>
+
+                <div class="table-wrapper" th:if="${!#lists.isEmpty(farmers)}">
+
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Farmer</th>
+                            <th>Total Net Crop Income</th>
+                            <th>Total Loan Repayment</th>
+                            <th>Remaining Amount</th>
+                            <th>Feasibility Status</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="farmer : ${farmers}">
+
+                            <td th:text="${farmer.fullName}">
+                                Farmer Name
+                            </td>
+
+                            <td th:text="${'₹ ' + #numbers.formatDecimal(feasibilityResults[farmer.id].totalNetCropIncome, 1, 'COMMA', 2, 'POINT')}">
+                                ₹ 0.00
+                            </td>
+
+                            <td th:text="${'₹ ' + #numbers.formatDecimal(feasibilityResults[farmer.id].totalLoanRepayment, 1, 'COMMA', 2, 'POINT')}">
+                                ₹ 0.00
+                            </td>
+
+                            <td th:text="${'₹ ' + #numbers.formatDecimal(feasibilityResults[farmer.id].remainingAmount, 1, 'COMMA', 2, 'POINT')}">
+                                ₹ 0.00
+                            </td>
+
+                            <td>
+                            <span
+                                    th:text="${feasibilityResults[farmer.id].status}"
+                                    th:style="${feasibilityResults[farmer.id].status == 'FEASIBLE' ? 'color: #26733b; font-weight: bold;' : 'color: #b42318; font-weight: bold;'}">
+                                FEASIBLE
+                            </span>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <p class="helper-text">
+                    This is a projected estimate based on registered crop seasons
+                    and calculated loan repayments. It is not a guarantee of repayment.
+                </p>
+
+            </article>
+
+        </section>
+        <!-- END REPAYMENT FEASIBILITY ANALYSIS -->
         <section class="content-grid" id="crop-seasons">
             <article class="panel">
                 <h3 th:text="#{crop.addTitle}">Plan a Crop Season</h3>
