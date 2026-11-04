@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import service.RepaymentEntryService;
 import service.RepaymentScheduleService;
+import service.RepaymentTransactionService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,13 +18,16 @@ public class RepaymentController {
 
     private final RepaymentScheduleService repaymentScheduleService;
     private final RepaymentEntryService repaymentEntryService;
+    private final RepaymentTransactionService repaymentTransactionService;
 
     public RepaymentController(
             RepaymentScheduleService repaymentScheduleService,
-            RepaymentEntryService repaymentEntryService) {
-
+            RepaymentEntryService repaymentEntryService,
+            RepaymentTransactionService repaymentTransactionService
+    ) {
         this.repaymentScheduleService = repaymentScheduleService;
         this.repaymentEntryService = repaymentEntryService;
+        this.repaymentTransactionService = repaymentTransactionService;
     }
 
     @PostMapping("/repayment-schedules")
@@ -34,7 +38,8 @@ public class RepaymentController {
             @RequestParam BigDecimal principalAmount,
             @RequestParam BigDecimal interestAmount,
             @RequestParam(defaultValue = "PENDING") String paymentStatus,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes
+    ) {
 
         try {
             RepaymentSchedule repaymentSchedule = new RepaymentSchedule(
@@ -73,7 +78,8 @@ public class RepaymentController {
             @RequestParam BigDecimal principalAmount,
             @RequestParam BigDecimal interestAmount,
             @RequestParam(defaultValue = "PENDING") String paymentStatus,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes
+    ) {
 
         try {
             RepaymentSchedule repaymentSchedule = new RepaymentSchedule(
@@ -107,7 +113,8 @@ public class RepaymentController {
     @PostMapping("/repayment-schedules/delete")
     public String deleteRepaymentSchedule(
             @RequestParam Long id,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes
+    ) {
 
         repaymentScheduleService.deleteRepaymentSchedule(id);
 
@@ -126,7 +133,8 @@ public class RepaymentController {
             @RequestParam BigDecimal amountPaid,
             @RequestParam String paymentMode,
             @RequestParam(required = false) String remarks,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes
+    ) {
 
         try {
             RepaymentEntry repaymentEntry = new RepaymentEntry(
@@ -137,17 +145,23 @@ public class RepaymentController {
                     remarks
             );
 
-            repaymentEntryService.addRepaymentEntry(repaymentEntry);
+            repaymentTransactionService.recordFullPayment(repaymentEntry);
 
             redirectAttributes.addFlashAttribute(
                     "successMessage",
-                    "Repayment entry added successfully."
+                    "Repayment entry saved and installment marked as paid."
             );
 
         } catch (IllegalArgumentException exception) {
             redirectAttributes.addFlashAttribute(
                     "errorMessage",
                     exception.getMessage()
+            );
+
+        } catch (RuntimeException exception) {
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "Could not save repayment entry. No changes were made."
             );
         }
 
@@ -162,7 +176,8 @@ public class RepaymentController {
             @RequestParam BigDecimal amountPaid,
             @RequestParam String paymentMode,
             @RequestParam(required = false) String remarks,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes
+    ) {
 
         try {
             RepaymentEntry repaymentEntry = new RepaymentEntry(
@@ -194,7 +209,8 @@ public class RepaymentController {
     @PostMapping("/repayment-entries/delete")
     public String deleteRepaymentEntry(
             @RequestParam Long id,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes
+    ) {
 
         repaymentEntryService.deleteRepaymentEntry(id);
 

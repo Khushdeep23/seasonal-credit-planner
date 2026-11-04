@@ -4,6 +4,8 @@ import model.Farmer;
 import model.RepaymentFeasibility;
 import model.RepaymentSchedule;
 import model.RiskAlert;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,15 +25,18 @@ public class RiskAlertService {
     private final FarmerService farmerService;
     private final RepaymentFeasibilityService repaymentFeasibilityService;
     private final RepaymentScheduleService repaymentScheduleService;
+    private final MessageSource messageSource;
 
     public RiskAlertService(
             FarmerService farmerService,
             RepaymentFeasibilityService repaymentFeasibilityService,
-            RepaymentScheduleService repaymentScheduleService
+            RepaymentScheduleService repaymentScheduleService,
+            MessageSource messageSource
     ) {
         this.farmerService = farmerService;
         this.repaymentFeasibilityService = repaymentFeasibilityService;
         this.repaymentScheduleService = repaymentScheduleService;
+        this.messageSource = messageSource;
     }
 
     public List<RiskAlert> getAllRiskAlerts() {
@@ -64,10 +69,17 @@ public class RiskAlertService {
 
             if (income.compareTo(repayment) < 0) {
                 riskAlerts.add(new RiskAlert(
-                        "INSUFFICIENT INCOME",
+                        message(
+                                "risk.type.insufficientIncome",
+                                "INSUFFICIENT INCOME"
+                        ),
                         "HIGH",
                         farmer.getFullName(),
-                        "Projected net crop income cannot cover the total loan repayment.",
+                        message(
+                                "risk.message.insufficientIncome",
+                                "Projected net crop income cannot cover "
+                                        + "the total loan repayment."
+                        ),
                         null,
                         feasibility.getRemainingAmount().abs()
                 ));
@@ -78,19 +90,23 @@ public class RiskAlertService {
 
                 BigDecimal burdenPercent = repayment
                         .divide(income, 4, RoundingMode.HALF_UP)
-                        .multiply(new BigDecimal("100"));
+                        .multiply(new BigDecimal("100"))
+                        .setScale(2, RoundingMode.HALF_UP);
 
                 if (burdenPercent.compareTo(HIGH_BURDEN_PERCENT) >= 0) {
                     riskAlerts.add(new RiskAlert(
-                            "HIGH REPAYMENT BURDEN",
+                            message(
+                                    "risk.type.highRepaymentBurden",
+                                    "HIGH REPAYMENT BURDEN"
+                            ),
                             "MEDIUM",
                             farmer.getFullName(),
-                            "Loan repayment uses "
-                                    + burdenPercent.setScale(
-                                    2,
-                                    RoundingMode.HALF_UP
-                            )
-                                    + "% of projected net crop income.",
+                            message(
+                                    "risk.message.highRepaymentBurden",
+                                    "Loan repayment uses {0}% of projected "
+                                            + "net crop income.",
+                                    burdenPercent
+                            ),
                             null,
                             repayment
                     ));
@@ -115,29 +131,52 @@ public class RiskAlertService {
 
             if (schedule.getDueDate().isBefore(today)) {
                 riskAlerts.add(new RiskAlert(
-                        "OVERDUE PAYMENT",
+                        message(
+                                "risk.type.overduePayment",
+                                "OVERDUE PAYMENT"
+                        ),
                         "HIGH",
                         schedule.getFarmerName(),
-                        "Installment "
-                                + schedule.getInstallmentNumber()
-                                + " is overdue.",
+                        message(
+                                "risk.message.overduePayment",
+                                "Installment {0} is overdue.",
+                                schedule.getInstallmentNumber()
+                        ),
                         schedule.getDueDate(),
                         schedule.getTotalAmount()
                 ));
             } else if (!schedule.getDueDate().isAfter(upcomingLimit)) {
                 riskAlerts.add(new RiskAlert(
-                        "UPCOMING PAYMENT",
+                        message(
+                                "risk.type.upcomingPayment",
+                                "UPCOMING PAYMENT"
+                        ),
                         "LOW",
                         schedule.getFarmerName(),
-                        "Installment "
-                                + schedule.getInstallmentNumber()
-                                + " is due within the next "
-                                + UPCOMING_PAYMENT_DAYS
-                                + " days.",
+                        message(
+                                "risk.message.upcomingPayment",
+                                "Installment {0} is due within the next "
+                                        + "{1} days.",
+                                schedule.getInstallmentNumber(),
+                                UPCOMING_PAYMENT_DAYS
+                        ),
                         schedule.getDueDate(),
                         schedule.getTotalAmount()
                 ));
             }
         }
+    }
+
+    private String message(
+            String code,
+            String defaultMessage,
+            Object... arguments
+    ) {
+        return messageSource.getMessage(
+                code,
+                arguments,
+                defaultMessage,
+                LocaleContextHolder.getLocale()
+        );
     }
 }

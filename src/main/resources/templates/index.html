@@ -316,15 +316,15 @@
         </div>
 
         <p class="menu-title" th:text="#{menu.main}">MAIN MENU</p>
-        <a class="nav-item active" href="/" th:text="#{nav.dashboard}">⌂ Dashboard</a>
-        <a class="nav-item" href="#farmer-form" th:text="#{nav.farmers}">♟ Farmer Profiles</a>
-        <a class="nav-item" href="#crop-seasons" th:text="#{nav.cropSeasons}">🌱 Crop Seasons</a>
-        <a class="nav-item" href="#loans" th:text="#{nav.loans}">₹ Loan Management</a>
-        <a class="nav-item" href="#repayments" th:text="#{nav.repayments}">✓ Repayments</a>
-        <a class="nav-item" href="#" th:text="#{nav.riskAnalysis}">⚠ Risk Analysis</a>
+        <a class="nav-item active" href="/"><span>⌂</span> <span th:text="#{nav.dashboard}">Dashboard</span></a>
+        <a class="nav-item" href="#farmer-form"><span>♟</span> <span th:text="#{nav.farmers}">Farmer Profiles</span></a>
+        <a class="nav-item" href="#crop-seasons"><span>🌱</span> <span th:text="#{nav.cropSeasons}">Crop Seasons</span></a>
+        <a class="nav-item" href="#loans"><span>₹</span> <span th:text="#{nav.loans}">Loan Management</span></a>
+        <a class="nav-item" href="#repayments"><span>✓</span> <span th:text="#{nav.repayments}">Repayments</span></a>
+        <a class="nav-item" href="#risk-alerts"><span>⚠</span> <span th:text="#{nav.riskAnalysis}">Risk Analysis</span></a>
 
         <div class="tip-box">
-            <strong th:text="#{tip.title}">Today's farm tip 🌿</strong><br>
+            <strong><span>🌿</span> <span th:text="#{tip.title}">Today's farm tip</span></strong><br>
             <span th:text="#{tip.text}">
                 Record crop costs and expected income regularly for better planning.
             </span>
@@ -334,7 +334,7 @@
     <main class="main-content">
         <header class="topbar">
             <div>
-                <h2 th:text="#{welcome.title}">Welcome, Farmer 👋</h2>
+                <h2><span th:text="#{welcome.title}">Welcome, Farmer</span> <span>👋</span></h2>
                 <p th:text="#{welcome.subtitle}">
                     Plan your crop season and credit repayments with confidence.
                 </p>
@@ -344,51 +344,68 @@
                     th:attr="aria-label=#{language.select}"
                     onchange="window.location.href='?lang=' + this.value">
                 <option value="en" th:selected="${#locale.language == 'en'}">English</option>
-                <option value="as" th:selected="${#locale.language == 'as'}">অসমীয়া — Assamese</option>
-                <option value="bn" th:selected="${#locale.language == 'bn'}">বাংলা — Bengali</option>
-                <option value="brx" th:selected="${#locale.language == 'brx'}">बड़ो — Bodo</option>
-                <option value="doi" th:selected="${#locale.language == 'doi'}">डोगरी — Dogri</option>
-                <option value="gu" th:selected="${#locale.language == 'gu'}">ગુજરાતી — Gujarati</option>
                 <option value="hi" th:selected="${#locale.language == 'hi'}">हिन्दी — Hindi</option>
-                <option value="kn" th:selected="${#locale.language == 'kn'}">ಕನ್ನಡ — Kannada</option>
-                <option value="ks" th:selected="${#locale.language == 'ks'}">کٲشُر — Kashmiri</option>
-                <option value="kok" th:selected="${#locale.language == 'kok'}">कोंकणी — Konkani</option>
-                <option value="mai" th:selected="${#locale.language == 'mai'}">मैथिली — Maithili</option>
-                <option value="ml" th:selected="${#locale.language == 'ml'}">മലയാളം — Malayalam</option>
-                <option value="mni" th:selected="${#locale.language == 'mni'}">মৈতৈলোন্ — Meitei</option>
-                <option value="mr" th:selected="${#locale.language == 'mr'}">मराठी — Marathi</option>
-                <option value="ne" th:selected="${#locale.language == 'ne'}">नेपाली — Nepali</option>
-                <option value="or" th:selected="${#locale.language == 'or'}">ଓଡ଼ିଆ — Odia</option>
                 <option value="pa" th:selected="${#locale.language == 'pa'}">ਪੰਜਾਬੀ — Punjabi</option>
-                <option value="sa" th:selected="${#locale.language == 'sa'}">संस्कृतम् — Sanskrit</option>
-                <option value="sat" th:selected="${#locale.language == 'sat'}">ᱥᱟᱱᱛᱟᱲᱤ — Santali</option>
-                <option value="sd" th:selected="${#locale.language == 'sd'}">سنڌي — Sindhi</option>
-                <option value="ta" th:selected="${#locale.language == 'ta'}">தமிழ் — Tamil</option>
-                <option value="te" th:selected="${#locale.language == 'te'}">తెలుగు — Telugu</option>
-                <option value="ur" th:selected="${#locale.language == 'ur'}">اردو — Urdu</option>
             </select>
         </header>
 
         <section class="stats-grid">
+
             <article class="stat-card">
                 <span class="stat-icon">👩🏽‍🌾</span>
-                <span class="stat-label" th:text="#{stats.totalFarmers}">Total Farmers</span>
-                <span class="stat-number" th:text="${#lists.size(farmers)}">0</span>
+                <span class="stat-label" th:text="#{stats.totalFarmers}">
+            Total Farmers
+        </span>
+                <span class="stat-number" th:text="${#lists.size(farmers)}">
+            0
+        </span>
             </article>
 
             <article class="stat-card">
                 <span class="stat-icon">🌾</span>
-                <span class="stat-label" th:text="#{stats.activeCropSeasons}">Active Crop Seasons</span>
-                <span class="stat-number" th:text="${#lists.size(cropSeasons)}">0</span>
+                <span class="stat-label" th:text="#{stats.activeCropSeasons}">
+            Active Crop Seasons
+        </span>
+                <span class="stat-number" th:text="${#lists.size(cropSeasons)}">
+            0
+        </span>
             </article>
 
             <article class="stat-card">
                 <span class="stat-icon">₹</span>
-                <span class="stat-label" th:text="#{stats.activeLoans}">Active Loans</span>
-                <span class="stat-number" th:text="${#lists.size(loans)}">0</span>
+                <span class="stat-label" th:text="#{stats.expectedRevenue}">Expected Revenue</span>
+                <span class="stat-number"
+                      th:text="${'₹ ' + #numbers.formatDecimal(totalExpectedRevenue, 1, 'COMMA', 2, 'POINT')}">
+            ₹ 0.00
+        </span>
             </article>
-        </section>
 
+            <article class="stat-card">
+                <span class="stat-icon">🌱</span>
+                <span class="stat-label" th:text="#{stats.netCropIncome}">Net Crop Income</span>
+                <span class="stat-number"
+                      th:text="${'₹ ' + #numbers.formatDecimal(totalNetCropIncome, 1, 'COMMA', 2, 'POINT')}">
+            ₹ 0.00
+        </span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-icon">🏦</span>
+                <span class="stat-label" th:text="#{stats.activeLoans}">Active Loans</span>
+                <span class="stat-number" th:text="${activeLoanCount}">
+            0
+        </span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-icon">⚠</span>
+                <span class="stat-label" th:text="#{stats.openRiskAlerts}">Open Risk Alerts</span>
+                <span class="stat-number" th:text="${riskAlertCount}">
+            0
+        </span>
+            </article>
+
+        </section>
         <section class="content-grid">
             <article class="panel" id="farmer-form">
                 <h3 th:text="#{farmer.addTitle}">Add a New Farmer</h3>
@@ -459,14 +476,15 @@
 
             <article class="panel" style="grid-column: 1 / -1;">
 
-                <h3>Risk Alerts</h3>
+                <h3 th:text="#{risk.title}">Risk Alerts</h3>
 
-                <p>
+                <p th:text="#{risk.description}">
                     Live warnings for insufficient crop income, high repayment burden,
                     overdue installments, and installments due within seven days.
                 </p>
 
-                <div class="empty-state" th:if="${#lists.isEmpty(riskAlerts)}">
+                <div class="empty-state" th:if="${#lists.isEmpty(riskAlerts)}"
+                     th:text="#{risk.empty}">
                     No risk alerts right now.
                 </div>
 
@@ -474,12 +492,12 @@
                     <table>
                         <thead>
                         <tr>
-                            <th>Severity</th>
-                            <th>Alert Type</th>
-                            <th>Farmer</th>
-                            <th>Details</th>
-                            <th>Due Date</th>
-                            <th>Amount</th>
+                            <th th:text="#{risk.severity}">Severity</th>
+                            <th th:text="#{risk.alertType}">Alert Type</th>
+                            <th th:text="#{repayment.farmer}">Farmer</th>
+                            <th th:text="#{risk.details}">Details</th>
+                            <th th:text="#{risk.dueDate}">Due Date</th>
+                            <th th:text="#{risk.amount}">Amount</th>
                         </tr>
                         </thead>
 
@@ -487,13 +505,17 @@
                         <tr th:each="alert : ${riskAlerts}">
 
                             <td>
-                        <span th:text="${alert.severity}"
-                              th:style="${alert.severity == 'HIGH'
+                        <span th:style="${alert.severity == 'HIGH'
                                   ? 'color: #b42318; font-weight: bold;'
                                   : (alert.severity == 'MEDIUM'
                                   ? 'color: #b54708; font-weight: bold;'
                                   : 'color: #26733b; font-weight: bold;')}">
-                            HIGH
+                            <span th:if="${alert.severity == 'HIGH'}"
+                                  th:text="#{risk.high}">HIGH</span>
+                            <span th:if="${alert.severity == 'MEDIUM'}"
+                                  th:text="#{risk.medium}">MEDIUM</span>
+                            <span th:if="${alert.severity == 'LOW'}"
+                                  th:text="#{risk.low}">LOW</span>
                         </span>
                             </td>
 
@@ -527,14 +549,15 @@
 
             <article class="panel" style="grid-column: 1 / -1;">
 
-                <h3>Repayment Feasibility Analysis</h3>
+                <h3 th:text="#{feasibility.title}">Repayment Feasibility Analysis</h3>
 
-                <p>
+                <p th:text="#{feasibility.description}">
                     Compares each farmer's projected net crop income
                     with the total calculated repayment of their registered loans.
                 </p>
 
-                <div class="empty-state" th:if="${#lists.isEmpty(farmers)}">
+                <div class="empty-state" th:if="${#lists.isEmpty(farmers)}"
+                     th:text="#{feasibility.empty}">
                     Add a farmer to view repayment feasibility.
                 </div>
 
@@ -543,11 +566,11 @@
                     <table>
                         <thead>
                         <tr>
-                            <th>Farmer</th>
-                            <th>Total Net Crop Income</th>
-                            <th>Total Loan Repayment</th>
-                            <th>Remaining Amount</th>
-                            <th>Feasibility Status</th>
+                            <th th:text="#{repayment.farmer}">Farmer</th>
+                            <th th:text="#{feasibility.totalNetIncome}">Total Net Crop Income</th>
+                            <th th:text="#{feasibility.totalLoanRepayment}">Total Loan Repayment</th>
+                            <th th:text="#{feasibility.remainingAmount}">Remaining Amount</th>
+                            <th th:text="#{feasibility.status}">Feasibility Status</th>
                         </tr>
                         </thead>
 
@@ -571,10 +594,11 @@
                             </td>
 
                             <td>
-                            <span
-                                    th:text="${feasibilityResults[farmer.id].status}"
-                                    th:style="${feasibilityResults[farmer.id].status == 'FEASIBLE' ? 'color: #26733b; font-weight: bold;' : 'color: #b42318; font-weight: bold;'}">
-                                FEASIBLE
+                            <span th:style="${feasibilityResults[farmer.id].status == 'FEASIBLE' ? 'color: #26733b; font-weight: bold;' : 'color: #b42318; font-weight: bold;'}">
+                                <span th:if="${feasibilityResults[farmer.id].status == 'FEASIBLE'}"
+                                      th:text="#{feasibility.feasible}">FEASIBLE</span>
+                                <span th:if="${feasibilityResults[farmer.id].status != 'FEASIBLE'}"
+                                      th:text="#{feasibility.notFeasible}">NOT FEASIBLE</span>
                             </span>
                             </td>
 
@@ -584,7 +608,7 @@
 
                 </div>
 
-                <p class="helper-text">
+                <p class="helper-text" th:text="#{feasibility.note}">
                     This is a projected estimate based on registered crop seasons
                     and calculated loan repayments. It is not a guarantee of repayment.
                 </p>
@@ -721,18 +745,16 @@
                                         onclick="editCropSeason(this)"
                                         style="padding: 8px 12px; margin-bottom: 8px; cursor: pointer; color: white;
                                                border: 0; border-radius: 8px; background: #354024;">
-                                    Edit
-                                </button>
+                                    <span th:text="#{common.edit}">Edit</span>                                </button>
 
                                 <form th:action="@{/crop-seasons/delete}" method="post"
-                                      onsubmit="return confirm('Delete this crop season?');">
+                                      th:onsubmit="|return confirm('#{confirmation.deleteCrop}');|">
                                     <input type="hidden" name="id" th:value="${cropSeason.id}">
                                     <button type="submit"
                                             th:text="#{crop.deleteButton}"
                                             style="padding: 8px 12px; cursor: pointer; color: white;
                                                    border: 0; border-radius: 8px; background: #9b3c34;">
-                                        Delete
-                                    </button>
+                                        <span th:text="#{common.delete}">Delete</span>                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -854,8 +876,8 @@
                             <th th:text="#{loan.tableType}">Loan Type</th>
                             <th th:text="#{loan.tablePurpose}">Purpose</th>
                             <th th:text="#{loan.tableAmount}">Amount</th>
-                            <th>Calculated Interest</th>
-                            <th>Total Repayment</th>
+                            <th th:text="#{loan.calculatedInterest}">Calculated Interest</th>
+                            <th th:text="#{loan.totalRepayment}">Total Repayment</th>
                             <th th:text="#{loan.tableRate}">Rate</th>
                             <th th:text="#{loan.tableTenure}">Tenure</th>
                             <th th:text="#{loan.tableStartDate}">Start Date</th>
@@ -921,18 +943,16 @@
                                         onclick="editLoan(this)"
                                         style="padding: 8px 12px; margin-bottom: 8px; cursor: pointer; color: white;
                                                border: 0; border-radius: 8px; background: #354024;">
-                                    Edit
-                                </button>
+                                    <span th:text="#{common.edit}">Edit</span>                                </button>
 
                                 <form th:action="@{/loans/delete}" method="post"
-                                      onsubmit="return confirm('Delete this loan?');">
+                                      th:onsubmit="|return confirm('#{confirmation.deleteLoan}');|">
                                     <input type="hidden" name="id" th:value="${loan.id}">
                                     <button type="submit"
                                             th:text="#{loan.deleteButton}"
                                             style="padding: 8px 12px; cursor: pointer; color: white;
                                                    border: 0; border-radius: 8px; background: #9b3c34;">
-                                        Delete
-                                    </button>
+                                        <span th:text="#{common.delete}">Delete</span>                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -944,7 +964,7 @@
 
         <section class="content-grid" id="repayments">
             <article class="panel">
-                <h3>Plan a Repayment Installment</h3>
+                <h3 th:text="#{repayment.scheduleTitle}">Plan a Repayment Installment</h3>
 
                 <form id="repaymentScheduleForm"
                       th:action="@{/repayment-schedules}"
@@ -955,61 +975,62 @@
                         <label for="scheduleLoanId">Loan</label>
                         <select id="scheduleLoanId" name="loanId" required
                                 class="language-select" style="width: 100%;">
-                            <option value="" selected disabled>Select a loan</option>
+                            <option value="" selected disabled th:text="#{repayment.selectLoan}">Select a loan</option>
                             <option th:each="loan : ${loans}"
                                     th:value="${loan.id}"
-                                    th:text="${'Loan #' + loan.id + ' - ' + loan.farmerName + ' - ₹ ' + loan.loanAmount}">
+                                    th:text="#{repayment.loanOption(${loan.id}, ${loan.farmerName}, ${loan.loanAmount})}">
                                 Loan
                             </option>
                         </select>
                     </div>
 
                     <div class="field">
-                        <label for="installmentNumber">Installment Number</label>
+                        <label for="installmentNumber" th:text="#{repayment.installmentNumber}">Installment Number</label>
                         <input id="installmentNumber" name="installmentNumber"
                                type="number" min="1" step="1" required>
                     </div>
 
                     <div class="field">
-                        <label for="dueDate">Due Date</label>
+                        <label for="dueDate" th:text="#{repayment.dueDate}">Due Date</label>
                         <input id="dueDate" name="dueDate" type="date" required>
                     </div>
 
                     <div class="field">
-                        <label for="principalAmount">Principal Amount (₹)</label>
+                        <label for="principalAmount" th:text="#{repayment.principalAmount}">Principal Amount (₹)</label>
                         <input id="principalAmount" name="principalAmount"
                                type="number" min="0" step="0.01" required>
                     </div>
 
                     <div class="field">
-                        <label for="interestAmount">Interest Amount (₹)</label>
+                        <label for="interestAmount" th:text="#{repayment.interestAmount}">Interest Amount (₹)</label>
                         <input id="interestAmount" name="interestAmount"
                                type="number" min="0" step="0.01" required>
                     </div>
 
                     <div class="field">
-                        <label for="paymentStatus">Payment Status</label>
+                        <label for="paymentStatus" th:text="#{repayment.paymentStatus}">Payment Status</label>
                         <select id="paymentStatus" name="paymentStatus" required
                                 class="language-select" style="width: 100%;">
-                            <option value="PENDING" selected>Pending</option>
-                            <option value="PAID">Paid</option>
-                            <option value="OVERDUE">Overdue</option>
+                            <option value="PENDING" selected th:text="#{repayment.pending}">Pending</option>
+                            <option value="PAID" th:text="#{repayment.paid}">Paid</option>
+                            <option value="OVERDUE" th:text="#{repayment.overdue}">Overdue</option>
                         </select>
                     </div>
 
                     <button id="repaymentScheduleSubmitButton"
                             class="save-button"
                             type="submit"
-                            data-update-label="Update Repayment Schedule">
-                        Save Repayment Schedule
+                            th:data-update-label="#{repayment.updateSchedule}">
+                        <span th:text="#{repayment.saveSchedule}">Save Repayment Schedule</span>
                     </button>
                 </form>
             </article>
 
             <article class="panel">
-                <h3>Repayment Schedule Directory</h3>
+                <h3 th:text="#{repayment.scheduleDirectory}">Repayment Schedule Directory</h3>
 
-                <div class="empty-state" th:if="${#lists.isEmpty(repaymentSchedules)}">
+                <div class="empty-state" th:if="${#lists.isEmpty(repaymentSchedules)}"
+                     th:text="#{repayment.noSchedules}">
                     No repayment schedules have been added yet.
                 </div>
 
@@ -1017,15 +1038,15 @@
                     <table>
                         <thead>
                         <tr>
-                            <th>Farmer</th>
-                            <th>Loan Type</th>
-                            <th>Installment</th>
-                            <th>Due Date</th>
-                            <th>Principal</th>
-                            <th>Interest</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <th th:text="#{repayment.farmer}">Farmer</th>
+                            <th th:text="#{repayment.loanType}">Loan Type</th>
+                            <th th:text="#{repayment.installment}">Installment</th>
+                            <th th:text="#{repayment.dueDate}">Due Date</th>
+                            <th th:text="#{repayment.principal}">Principal</th>
+                            <th th:text="#{repayment.interest}">Interest</th>
+                            <th th:text="#{repayment.total}">Total</th>
+                            <th th:text="#{repayment.status}">Status</th>
+                            <th th:text="#{repayment.actions}">Actions</th>
                         </tr>
                         </thead>
 
@@ -1044,7 +1065,14 @@
                             <td th:text="${'₹ ' + #numbers.formatDecimal(schedule.totalAmount, 1, 'COMMA', 2, 'POINT')}">
                                 ₹ 0.00
                             </td>
-                            <td th:text="${schedule.paymentStatus}">PENDING</td>
+                            <td>
+                                <span th:if="${schedule.paymentStatus == 'PENDING'}"
+                                      th:text="#{repayment.pending}">Pending</span>
+                                <span th:if="${schedule.paymentStatus == 'PAID'}"
+                                      th:text="#{repayment.paid}">Paid</span>
+                                <span th:if="${schedule.paymentStatus == 'OVERDUE'}"
+                                      th:text="#{repayment.overdue}">Overdue</span>
+                            </td>
 
                             <td>
                                 <button type="button"
@@ -1058,17 +1086,15 @@
                                         onclick="editRepaymentSchedule(this)"
                                         style="padding: 8px 12px; margin-bottom: 8px; cursor: pointer; color: white;
                                                border: 0; border-radius: 8px; background: #354024;">
-                                    Edit
-                                </button>
+                                    <span th:text="#{common.edit}">Edit</span>                                </button>
 
                                 <form th:action="@{/repayment-schedules/delete}" method="post"
-                                      onsubmit="return confirm('Delete this repayment schedule?');">
+                                      th:onsubmit="|return confirm('#{confirmation.deleteSchedule}');|">
                                     <input type="hidden" name="id" th:value="${schedule.id}">
                                     <button type="submit"
                                             style="padding: 8px 12px; cursor: pointer; color: white;
                                                    border: 0; border-radius: 8px; background: #9b3c34;">
-                                        Delete
-                                    </button>
+                                        <span th:text="#{common.delete}">Delete</span>                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -1080,7 +1106,7 @@
 
         <section class="content-grid">
             <article class="panel">
-                <h3>Record a Repayment</h3>
+                <h3 th:text="#{repayment.recordTitle}">Record a Repayment</h3>
 
                 <form id="repaymentEntryForm"
                       th:action="@{/repayment-entries}"
@@ -1091,57 +1117,59 @@
                         <label for="entryScheduleId">Repayment Schedule</label>
                         <select id="entryScheduleId" name="repaymentScheduleId" required
                                 class="language-select" style="width: 100%;">
-                            <option value="" selected disabled>Select an installment</option>
+                            <option value="" selected disabled th:text="#{repayment.selectInstallment}">Select an installment</option>
                             <option th:each="schedule : ${repaymentSchedules}"
                                     th:value="${schedule.id}"
-                                    th:text="${schedule.farmerName + ' - Installment ' + schedule.installmentNumber + ' - ₹ ' + schedule.totalAmount}">
+                                    th:text="#{repayment.installmentOption(${schedule.farmerName}, ${schedule.installmentNumber}, ${schedule.totalAmount})}">
                                 Installment
                             </option>
                         </select>
                     </div>
 
                     <div class="field">
-                        <label for="paymentDate">Payment Date</label>
+                        <label for="paymentDate" th:text="#{repayment.paymentDate}">Payment Date</label>
                         <input id="paymentDate" name="paymentDate" type="date" required>
                     </div>
 
                     <div class="field">
-                        <label for="amountPaid">Amount Paid (₹)</label>
+                        <label for="amountPaid" th:text="#{repayment.amountPaid}">Amount Paid (₹)</label>
                         <input id="amountPaid" name="amountPaid"
                                type="number" min="0.01" step="0.01" required>
                     </div>
 
                     <div class="field">
-                        <label for="paymentMode">Payment Mode</label>
+                        <label for="paymentMode" th:text="#{repayment.paymentMode}">Payment Mode</label>
                         <select id="paymentMode" name="paymentMode" required
                                 class="language-select" style="width: 100%;">
-                            <option value="" selected disabled>Select payment mode</option>
-                            <option value="Cash">Cash</option>
-                            <option value="UPI">UPI</option>
-                            <option value="Bank Transfer">Bank Transfer</option>
-                            <option value="Other">Other</option>
+                            <option value="" selected disabled th:text="#{repayment.selectPaymentMode}">Select payment mode</option>
+                            <option value="Cash" th:text="#{repayment.cash}">Cash</option>
+                            <option value="UPI" th:text="#{repayment.upi}">UPI</option>
+                            <option value="Bank Transfer" th:text="#{repayment.bankTransfer}">Bank Transfer</option>
+                            <option value="Other" th:text="#{repayment.other}">Other</option>
                         </select>
                     </div>
 
                     <div class="field">
-                        <label for="remarks">Remarks (Optional)</label>
+                        <label for="remarks" th:text="#{repayment.remarks}">Remarks (Optional)</label>
                         <textarea id="remarks" name="remarks" rows="3"
+                                  th:placeholder="#{repayment.remarksPlaceholder}"
                                   placeholder="For example: Paid at local branch"></textarea>
                     </div>
 
                     <button id="repaymentEntrySubmitButton"
                             class="save-button"
                             type="submit"
-                            data-update-label="Update Repayment Entry">
-                        Save Repayment Entry
+                            th:data-update-label="#{repayment.updateEntry}">
+                        <span th:text="#{repayment.saveEntry}">Save Repayment Entry</span>
                     </button>
                 </form>
             </article>
 
             <article class="panel">
-                <h3>Repayment Entry Directory</h3>
+                <h3 th:text="#{repayment.entryDirectory}">Repayment Entry Directory</h3>
 
-                <div class="empty-state" th:if="${#lists.isEmpty(repaymentEntries)}">
+                <div class="empty-state" th:if="${#lists.isEmpty(repaymentEntries)}"
+                     th:text="#{repayment.noEntries}">
                     No repayment entries have been added yet.
                 </div>
 
@@ -1149,13 +1177,13 @@
                     <table>
                         <thead>
                         <tr>
-                            <th>Farmer</th>
-                            <th>Installment</th>
-                            <th>Payment Date</th>
-                            <th>Amount Paid</th>
-                            <th>Payment Mode</th>
-                            <th>Remarks</th>
-                            <th>Actions</th>
+                            <th th:text="#{repayment.farmer}">Farmer</th>
+                            <th th:text="#{repayment.installment}">Installment</th>
+                            <th th:text="#{repayment.paymentDateTable}">Payment Date</th>
+                            <th th:text="#{repayment.amountPaidTable}">Amount Paid</th>
+                            <th th:text="#{repayment.paymentModeTable}">Payment Mode</th>
+                            <th th:text="#{repayment.remarks}">Remarks</th>
+                            <th th:text="#{repayment.actions}">Actions</th>
                         </tr>
                         </thead>
 
@@ -1167,7 +1195,16 @@
                             <td th:text="${'₹ ' + #numbers.formatDecimal(entry.amountPaid, 1, 'COMMA', 2, 'POINT')}">
                                 ₹ 0.00
                             </td>
-                            <td th:text="${entry.paymentMode}">Cash</td>
+                            <td>
+                                <span th:if="${entry.paymentMode == 'Cash'}"
+                                      th:text="#{repayment.cash}">Cash</span>
+                                <span th:if="${entry.paymentMode == 'UPI'}"
+                                      th:text="#{repayment.upi}">UPI</span>
+                                <span th:if="${entry.paymentMode == 'Bank Transfer'}"
+                                      th:text="#{repayment.bankTransfer}">Bank Transfer</span>
+                                <span th:if="${entry.paymentMode == 'Other'}"
+                                      th:text="#{repayment.other}">Other</span>
+                            </td>
                             <td th:text="${entry.remarks}">Remarks</td>
 
                             <td>
@@ -1181,17 +1218,15 @@
                                         onclick="editRepaymentEntry(this)"
                                         style="padding: 8px 12px; margin-bottom: 8px; cursor: pointer; color: white;
                                                border: 0; border-radius: 8px; background: #354024;">
-                                    Edit
-                                </button>
+                                    <span th:text="#{common.edit}">Edit</span>                                </button>
 
                                 <form th:action="@{/repayment-entries/delete}" method="post"
-                                      onsubmit="return confirm('Delete this repayment entry?');">
+                                      th:onsubmit="|return confirm('#{confirmation.deleteEntry}');|">
                                     <input type="hidden" name="id" th:value="${entry.id}">
                                     <button type="submit"
                                             style="padding: 8px 12px; cursor: pointer; color: white;
                                                    border: 0; border-radius: 8px; background: #9b3c34;">
-                                        Delete
-                                    </button>
+                                        <span th:text="#{common.delete}">Delete</span>                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -1297,3 +1332,9 @@
 </script>
 </body>
 </html>
+
+
+
+
+
+

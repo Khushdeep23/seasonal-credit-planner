@@ -1,8 +1,10 @@
 package controller;
 
+import model.CropSeason;
 import model.Farmer;
 import model.Loan;
 import model.RepaymentFeasibility;
+import model.RiskAlert;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,7 @@ import service.RepaymentScheduleService;
 import service.RiskAlertService;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,17 +62,61 @@ public class FarmerController {
     public String home(Model model) {
 
         List<Farmer> farmers = farmerService.getAllFarmers();
+        List<CropSeason> cropSeasons =
+                cropSeasonService.getAllCropSeasons();
+        List<Loan> loans = loanService.getAllLoans();
+        List<RiskAlert> riskAlerts = riskAlertService.getAllRiskAlerts();
 
-        model.addAttribute("farmers", farmers);
+        BigDecimal totalExpectedRevenue = BigDecimal.ZERO;
+        BigDecimal totalNetCropIncome = BigDecimal.ZERO;
 
-        model.addAttribute(
-                "cropSeasons",
-                cropSeasonService.getAllCropSeasons()
+        for (CropSeason cropSeason : cropSeasons) {
+            totalExpectedRevenue = totalExpectedRevenue.add(
+                    cropSeason.getExpectedRevenue()
+            );
+
+            totalNetCropIncome = totalNetCropIncome.add(
+                    cropSeason.getNetCropIncome()
+            );
+        }
+
+        totalExpectedRevenue = totalExpectedRevenue.setScale(
+                2,
+                RoundingMode.HALF_UP
         );
 
-        List<Loan> loans = loanService.getAllLoans();
+        totalNetCropIncome = totalNetCropIncome.setScale(
+                2,
+                RoundingMode.HALF_UP
+        );
 
+        long activeLoanCount = loans.stream()
+                .filter(loan -> "ACTIVE".equalsIgnoreCase(
+                        loan.getStatus()
+                ))
+                .count();
+
+        model.addAttribute("farmers", farmers);
+        model.addAttribute("cropSeasons", cropSeasons);
         model.addAttribute("loans", loans);
+        model.addAttribute("riskAlerts", riskAlerts);
+
+        model.addAttribute(
+                "totalExpectedRevenue",
+                totalExpectedRevenue
+        );
+
+        model.addAttribute(
+                "totalNetCropIncome",
+                totalNetCropIncome
+        );
+
+        model.addAttribute("activeLoanCount", activeLoanCount);
+
+        model.addAttribute(
+                "riskAlertCount",
+                riskAlerts.size()
+        );
 
         Map<Long, BigDecimal> loanInterestAmounts = new LinkedHashMap<>();
         Map<Long, BigDecimal> loanTotalRepayments = new LinkedHashMap<>();
@@ -111,11 +158,6 @@ public class FarmerController {
         model.addAttribute(
                 "repaymentEntries",
                 repaymentEntryService.getAllRepaymentEntries()
-        );
-
-        model.addAttribute(
-                "riskAlerts",
-                riskAlertService.getAllRiskAlerts()
         );
 
         return "index";
